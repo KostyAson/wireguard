@@ -1,0 +1,11 @@
+
+[Interface]
+PrivateKey = 4Dyst8Qta/tbEvCVuaXkTmBHQOTTY5oTeB9Ynmdhh0g=
+
+[Peer]
+PublicKey = AJjY3gImgyvxgVcroGr2khX4edF/1EZkmVqni4bqhD4=
+PresharedKey = 45fPLcAgBWDtCouA1SNRskrSsBMCI0r0pt1cC6NmtKw=
+AllowedIPs = 0.0.0.0/0, ::/0
+PersistentKeepalive = 0
+Endpoint = 85.92.108.125:51820
+
