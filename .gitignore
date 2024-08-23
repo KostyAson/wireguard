@@ -2,3 +2,4 @@ __pycache__
 db.sqlite
 wg0.conf
 .env
+strip.txt
