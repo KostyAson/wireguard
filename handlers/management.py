@@ -25,7 +25,7 @@ async def get_device_name(message : aiogram.types.Message, state : aiogram.fsm.c
     await state.set_state(None)
     utils.add_device(message.from_user.id, message.text)
     await message.answer_document(
-        aiogram.types.input_file.FSInputFile(f'{message.text}.conf'),
+        aiogram.types.input_file.FSInputFile(f'{message.text.replace(" ", "-")}.conf'),
         caption=f'Файл для подключения к VPN с {message.text}\nИспользуйте данный файл только для одного устройства'
     )
     os.system(f'rm "{message.text.replace(" ", "-")}.conf"')
