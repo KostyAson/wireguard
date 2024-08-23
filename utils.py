@@ -94,10 +94,12 @@ def get_free_address():
     data = cur.fetchall()
     cur.close()
     conn.close()
-    addresses = set([int(address[0][:-3].split('.')[-1]) for address in data])
+    addresses1 = set([int(address[0][:-3].split('.')[-2]) for address in data])
+    addresses2 = set([int(address[0][:-3].split('.')[-1]) for address in data])
     for i in range(2, 256):
-        if i not in addresses:
-            return f'10.0.0.{i}/32'
+        for j in range(0, 256):
+            if i not in addresses2 and j not in addresses1:
+                return f'10.0.{j}.{i}/32'
 
 
 def delete_device(device_id):
