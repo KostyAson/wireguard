@@ -59,7 +59,7 @@ def add_device(user_id, name):
     cur.close()
     conn.close()
     conf = open('device.conf').read().replace('{private}', private).replace('{address}', address).replace('{ip}', os.getenv('ip'))
-    file_conf = open(f'{name.replace(' ', '-')}.conf', 'w+')
+    file_conf = open(f'{name.replace(" ", "-")}.conf', 'w+')
     file_conf.write(conf)
     file_conf.close()
     if work:
@@ -127,7 +127,7 @@ def get_device_file(device_id):
     cur.close()
     conn.close()
     conf = open('device.conf').read().replace('{private}', private).replace('{address}', address).replace('{ip}', os.getenv('ip'))
-    file_conf = open(f'{name.replace(' ', '-')}.conf', 'w+')
+    file_conf = open(f'{name.replace(" ", "-")}.conf', 'w+')
     file_conf.write(conf)
     file_conf.close()
     return name.replace(' ', '-')
