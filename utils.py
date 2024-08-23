@@ -79,11 +79,9 @@ def update_server_config():
     config_file = open('wg0.conf', 'w')
     config_file.write(config)
     config_file.close()
-    print('Update')
     os.system('wg-quick strip wg0 > strip.txt')
     os.system('wg syncconf wg0 strip.txt')
     os.system('rm strip.txt')
-    print('End update')
 
 
 def get_free_address():
@@ -131,3 +129,13 @@ def get_device_file(device_id):
     file_conf.write(conf)
     file_conf.close()
     return name.replace(' ', '-')
+
+
+def get_count_user_work_devices(user_id):
+    conn = sqlite3.connect('db.sqlite')
+    cur = conn.cursor()
+    cur.execute(f'SELECT name, work, id FROM devices WHERE user_id={user_id} AND work=1;')
+    data = cur.fetchall()
+    cur.close()
+    conn.close()
+    return len(data)

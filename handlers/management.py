@@ -80,10 +80,15 @@ async def manage_device(callback : aiogram.types.CallbackQuery, state : aiogram.
             text='Устройство выключено'
         )
     elif manage_type == 'on':
-        utils.change_work_device(device_id, 1)
-        await callback.message.answer(
-            text='Устройство включено'
-        )
+        if utils.get_count_user_work_devices(callback.from_user.id) == 2:
+            await callback.message.answer(
+                'У вас уже включено 2 устройства.\nДля того что бы включить это устройство выключите одно из работающих устройств.'
+            )
+        else:
+            utils.change_work_device(device_id, 1)
+            await callback.message.answer(
+                text='Устройство включено'
+            )
     elif manage_type == 'file':
         name = utils.get_device_file(device_id)
         await callback.message.answer_document(
