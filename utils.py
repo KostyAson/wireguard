@@ -82,9 +82,9 @@ def update_server_config():
     config_file = open('wg0.conf', 'w')
     config_file.write(config)
     config_file.close()
-    os.system('wg-quick strip wg0 > strip.txt')
-    os.system('wg syncconf wg0 strip.txt')
-    os.system('rm strip.txt')
+    #os.system('wg-quick strip wg0 > strip.txt')
+    #os.system('wg syncconf wg0 strip.txt')
+    #os.system('rm strip.txt')
 
 
 def get_free_address():
@@ -94,12 +94,11 @@ def get_free_address():
     data = cur.fetchall()
     cur.close()
     conn.close()
-    addresses1 = set([int(address[0][:-3].split('.')[-2]) for address in data])
-    addresses2 = set([int(address[0][:-3].split('.')[-1]) for address in data])
+    addresses = set([address[0] for address in data])
     for i in range(2, 256):
         for j in range(0, 256):
-            if i not in addresses2 and j not in addresses1:
-                return f'10.0.{j}.{i}/32'
+            if f'10.0.{i}.{j}/32' not in addresses:
+                return f'10.0.{i}.{j}/32'
 
 
 def delete_device(device_id):
