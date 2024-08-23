@@ -5,6 +5,7 @@ import handlers.pay
 import handlers.management
 import dotenv
 import os
+import utils
 
 dotenv.load_dotenv('.env')
 
@@ -18,7 +19,7 @@ dp.include_router(handlers.management.router)
 
 
 async def main():
-    await dp.start_polling(bot)
+    await asyncio.gather(dp.start_polling(bot), utils.control_sub(bot))
 
 
 if __name__ == '__main__':

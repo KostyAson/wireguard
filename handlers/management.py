@@ -33,17 +33,20 @@ async def get_device_name(message : aiogram.types.Message, state : aiogram.fsm.c
 
 @router.message(aiogram.F.text=='/management')
 async def device_management(message : aiogram.types.Message, state : aiogram.fsm.context.FSMContext):
-    keyboard = keyboards.make_choose_device_keyboard(message.from_user.id)
-    if not keyboard:
-        await message.answer(
-            text='У вас нет добавленных устройств\nДобавьте командой - /add'
-        )
+    if utils.check_user_sub(message.from_user.id):
+        keyboard = keyboards.make_choose_device_keyboard(message.from_user.id)
+        if not keyboard:
+            await message.answer(
+                text='У вас нет добавленных устройств\nДобавьте командой - /add'
+            )
+        else:
+            await state.set_state(states.ManageDevice.choose_device)
+            await message.answer(
+                text='Выберите устройство',
+                reply_markup=keyboard
+            )
     else:
-        await state.set_state(states.ManageDevice.choose_device)
-        await message.answer(
-            text='Выберите устройство',
-            reply_markup=keyboard
-        )
+        await message.answer('Сначала оплатите подписку - /pay')
 
 
 @router.callback_query(states.ManageDevice.choose_device)

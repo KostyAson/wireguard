@@ -1,6 +1,9 @@
 import sqlite3
 import os
 import dotenv
+import datetime as dt
+import asyncio
+import aiogram
 
 dotenv.load_dotenv('.env')
 
@@ -27,7 +30,7 @@ def add_user(user_id):
 def set_user_subscription(user_id, subscription):
     conn = sqlite3.connect('db.sqlite')
     cur = conn.cursor()
-    cur.execute(f'UPDATE users SET subscription={subscription} WHERE id={user_id};')
+    cur.execute(f'UPDATE users SET subscription={subscription},subdate="{dt.datetime.now().isoformat()}" WHERE id={user_id};')
     conn.commit()
     cur.close()
     conn.close()
@@ -139,3 +142,22 @@ def get_count_user_work_devices(user_id):
     cur.close()
     conn.close()
     return len(data)
+
+
+async def control_sub(bot : aiogram.Bot):
+    while True:
+        conn = sqlite3.connect('db.sqlite')
+        cur = conn.cursor()
+        cur.execute(f'SELECT id, subdate FROM users WHERE subscription=1;')
+        data = cur.fetchall()
+        for id, date in data:
+            date = dt.datetime.fromisoformat(date)
+            if (dt.datetime.now() - date).total_seconds() >= 2592000:
+                cur.execute(f'UPDATE users SET subscription=0 WHERE id={id};')
+                cur.execute(f'UPDATE devices SET work=0 WHERE user_id={id};')
+                await bot.send_message(id, 'Истек срок действия вашей подписки\nОплатить подписку - /pay')
+        conn.commit()
+        cur.close()
+        conn.close()
+        update_server_config()
+        await asyncio.sleep(3600)
