@@ -30,7 +30,7 @@ def add_user(user_id):
 def set_user_subscription(user_id, subscription):
     conn = sqlite3.connect('db.sqlite')
     cur = conn.cursor()
-    cur.execute(f'UPDATE users SET subscription={subscription},subdate="{dt.datetime.now().isoformat()}" WHERE id={user_id};')
+    cur.execute(f'UPDATE users SET subscription={subscription},subdate="{(dt.datetime.now() + dt.timedelta(days=30)).isoformat()}" WHERE id={user_id};')
     conn.commit()
     cur.close()
     conn.close()
@@ -153,7 +153,7 @@ async def control_sub(bot : aiogram.Bot):
         data = cur.fetchall()
         for id, date in data:
             date = dt.datetime.fromisoformat(date)
-            if (dt.datetime.now() - date).total_seconds() >= 2592000:
+            if dt.datetime.now() >= date:
                 cur.execute(f'UPDATE users SET subscription=0 WHERE id={id};')
                 cur.execute(f'UPDATE devices SET work=0 WHERE user_id={id};')
                 await bot.send_message(id, 'Истек срок действия вашей подписки\nОплатить подписку - /pay')
