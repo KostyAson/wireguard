@@ -1,5 +1,6 @@
 import aiogram
 import utils
+import json
 
 router = aiogram.Router()
 
@@ -17,7 +18,26 @@ async def invoicing(message : aiogram.types.Message):
                 'amount': '20000'
             }
         ],
-        provider_token='381764678:TEST:93024'
+        provider_token='390540012:LIVE:55912',
+        need_email=True,
+        send_email_to_provider=True,
+        provider_data=json.dumps(
+            {
+                'receipt': {
+                    'items': [
+                        {
+                            'description': 'подписка VPN на месяц',
+                            'quantity': '1.00',
+                            'amount': {
+                                'value': '200.00',
+                                'currency': 'RUB'
+                            },
+                            'vat_code': 1
+                        }
+                    ]
+                }
+            }
+        )
     )
 
 
