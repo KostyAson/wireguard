@@ -27,10 +27,10 @@ def add_user(user_id):
     conn.close()
 
 
-def set_user_subscription(user_id, subscription):
+def set_user_subscription(user_id, subscription, subdate=None):
     conn = sqlite3.connect('db.sqlite')
     cur = conn.cursor()
-    cur.execute(f'UPDATE users SET subscription={subscription},subdate="{(dt.datetime.now() + dt.timedelta(days=30)).isoformat()}" WHERE id={user_id};')
+    cur.execute(f'UPDATE users SET subscription={subscription},subdate="{subdate}" WHERE id={user_id};')
     conn.commit()
     cur.close()
     conn.close()
@@ -82,9 +82,9 @@ def update_server_config():
     config_file = open('wg0.conf', 'w')
     config_file.write(config)
     config_file.close()
-    #os.system('wg-quick strip wg0 > strip.txt')
-    #os.system('wg syncconf wg0 strip.txt')
-    #os.system('rm strip.txt')
+    os.system('wg-quick strip wg0 > strip.txt')
+    os.system('wg syncconf wg0 strip.txt')
+    os.system('rm strip.txt')
 
 
 def get_free_address():
@@ -162,3 +162,13 @@ async def control_sub(bot : aiogram.Bot):
         conn.close()
         update_server_config()
         await asyncio.sleep(3600)
+
+
+def check_user_in_db(user_id):
+    conn = sqlite3.connect('db.sqlite')
+    cur = conn.cursor()
+    cur.execute(f'SELECT id FROM users WHERE id={user_id};')
+    data = cur.fetchall()
+    cur.close()
+    conn.close()
+    return bool(len(data))

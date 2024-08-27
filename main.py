@@ -3,6 +3,7 @@ import aiogram
 import handlers.info
 import handlers.pay
 import handlers.management
+import handlers.admin
 import dotenv
 import os
 import utils
@@ -16,6 +17,7 @@ dp = aiogram.Dispatcher()
 dp.include_router(handlers.info.router)
 dp.include_router(handlers.pay.router)
 dp.include_router(handlers.management.router)
+dp.include_router(handlers.admin.router)
 
 
 async def main():

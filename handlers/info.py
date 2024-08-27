@@ -8,13 +8,14 @@ router = aiogram.Router()
 
 @router.message(aiogram.F.text=='/start')
 async def start_message(message : aiogram.types.Message):
-    utils.add_user(message.from_user.id)
+    if not utils.check_user_in_db(message.from_user.id):
+        utils.add_user(message.from_user.id)
     await message.answer(text=answers.start)
 
 
 @router.message(aiogram.F.text=='/subinfo')
 async def about_sub_message(message : aiogram.types.Message):
-    await message.answer(answers.subinfo)
+    await message.answer(answers.subinfo.replace('{cost}', open('sub_cost.txt').read()))
 
 
 @router.message(aiogram.F.text=='/instruction')

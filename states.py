@@ -8,3 +8,8 @@ class AddDevice(aiogram.fsm.state.StatesGroup):
 class ManageDevice(aiogram.fsm.state.StatesGroup):
     choose_device = aiogram.fsm.state.State()
     get_manage_type = aiogram.fsm.state.State()
+
+
+class AdminState(aiogram.fsm.state.StatesGroup):
+    grand_sub = aiogram.fsm.state.State()
+    set_sub_cost = aiogram.fsm.state.State()
