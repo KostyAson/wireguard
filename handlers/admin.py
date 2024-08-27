@@ -38,7 +38,7 @@ async def grand_sub(message : aiogram.types.Message, state : aiogram.fsm.context
     await state.set_state(None)
     if message.from_user.id == 2096978507:
         utils.set_user_subscription(
-            message.from_user.id,
+            message.text,
             1,
             '2050-09-26T23:15:43.227305'
         )
