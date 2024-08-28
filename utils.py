@@ -4,6 +4,7 @@ import dotenv
 import datetime as dt
 import asyncio
 import aiogram
+import transliterate
 
 dotenv.load_dotenv('.env')
 
@@ -18,10 +19,10 @@ def check_user_sub(user_id):
     return data
 
 
-def add_user(user_id):
+def add_user(user_id, username):
     conn = sqlite3.connect('db.sqlite')
     cur = conn.cursor()
-    cur.execute(f'INSERT INTO users(id, subscription) VALUES({user_id}, 0);')
+    cur.execute(f'INSERT INTO users(id, subscription, username) VALUES({user_id}, 0, "{username}");')
     conn.commit()
     cur.close()
     conn.close()
@@ -46,23 +47,22 @@ def get_user_devices(user_id):
     return data
 
 
-def add_device(user_id, name):
+def add_device(user_id, name, username):
     conn = sqlite3.connect('db.sqlite')
     cur = conn.cursor()
     work = 1 if len(get_user_devices(user_id)) < 2 else 0
-    name = name.replace(' ', '__space__')
+    name = get_normal_device_name(name)
     os.system(f'wg genkey | tee {name}_private.key | wg pubkey > {name}_public.key')
     private = open(f'{name}_private.key').read().strip()
     public = open(f'{name}_public.key').read().strip()
     os.system(f'rm {name}_private.key && rm {name}_public.key')
-    name = name.replace('__space__', ' ')
     address = get_free_address()
-    cur.execute(f'INSERT into devices(user_id, name, work, public_key, private_key, address) VALUES({user_id}, "{name}", {work}, "{public}", "{private}", "{address}");')
+    cur.execute(f'INSERT into devices(user_id, name, work, public_key, private_key, address, username) VALUES({user_id}, "{name}", {work}, "{public}", "{private}", "{address}", "{username}");')
     conn.commit()
     cur.close()
     conn.close()
     conf = open('device.conf').read().replace('{private}', private).replace('{address}', address).replace('{ip}', os.getenv('ip'))
-    file_conf = open(f'{name.replace(" ", "-")}.conf', 'w+')
+    file_conf = open(f'{name}.conf', 'w+')
     file_conf.write(conf)
     file_conf.close()
     if work:
@@ -82,9 +82,9 @@ def update_server_config():
     config_file = open('wg0.conf', 'w')
     config_file.write(config)
     config_file.close()
-    os.system('wg-quick strip wg0 > strip.txt')
+    '''os.system('wg-quick strip wg0 > strip.txt')
     os.system('wg syncconf wg0 strip.txt')
-    os.system('rm strip.txt')
+    os.system('rm strip.txt')'''
 
 
 def get_free_address():
@@ -129,10 +129,10 @@ def get_device_file(device_id):
     cur.close()
     conn.close()
     conf = open('device.conf').read().replace('{private}', private).replace('{address}', address).replace('{ip}', os.getenv('ip'))
-    file_conf = open(f'{name.replace(" ", "-")}.conf', 'w+')
+    file_conf = open(f'{get_normal_device_name(name)}.conf', 'w+')
     file_conf.write(conf)
     file_conf.close()
-    return name.replace(' ', '-')
+    return name
 
 
 def get_count_user_work_devices(user_id):
@@ -172,3 +172,7 @@ def check_user_in_db(user_id):
     cur.close()
     conn.close()
     return bool(len(data))
+
+
+def get_normal_device_name(name):
+    return transliterate.translit(name.replace(' ', '-'), language_code='ru', reversed=True)

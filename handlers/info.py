@@ -9,7 +9,10 @@ router = aiogram.Router()
 @router.message(aiogram.F.text=='/start')
 async def start_message(message : aiogram.types.Message):
     if not utils.check_user_in_db(message.from_user.id):
-        utils.add_user(message.from_user.id)
+        name = message.from_user.username
+        if name is None:
+            name = message.from_user.first_name + " " + message.from_user.last_name
+        utils.add_user(message.from_user.id, name)
     await message.answer(text=answers.start)
 
 

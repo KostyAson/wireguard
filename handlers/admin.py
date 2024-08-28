@@ -4,6 +4,7 @@ import aiogram.fsm
 import aiogram.fsm.context
 import utils
 import sqlite3
+import os
 
 router = aiogram.Router()
 
@@ -17,6 +18,7 @@ async def admin(message : aiogram.types.Message):
 Количество пользователей открывших бота - /count_all_users
 Количество пользователей с подпиской - /count_users
 Изменить цену подписки - /change_cost
+Статистика устройств - /devices_stats
 '''
         )
     else:
@@ -101,3 +103,27 @@ async def set_sub_cost(message : aiogram.types.Message, state : aiogram.fsm.cont
         await message.answer('Стоимость изменена')
     else:
         await message.answer('Отказано в доступе')
+
+
+@router.message()
+async def devices_stats(message : aiogram.types.Message):
+    os.system('wg show > stats.txt')
+    stats = open('stats.txt').readlines()
+    os.system('rm stats.txt')
+    conn = sqlite3.connect('db.sqlite')
+    cur = conn.cursor()
+    cur.execute('SELECT public_key, username, name FROM devices;')
+    data = cur.fetchall()
+    cur.close()
+    conn.close()
+    dic = {}
+    for x in data:
+        dic[x[0]] = str(x[2]) + ' @' + str(x[1])
+    ans = ''
+    for s in stats:
+        s = s.strip()
+        if s[:4] == 'peer':
+            public_key = s.split()[1]
+            s = dic[public_key]
+        ans += s + '\n'
+    await message.answer(ans)

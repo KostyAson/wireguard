@@ -23,12 +23,17 @@ async def add_device(message : aiogram.types.Message, state : aiogram.fsm.contex
 @router.message(states.AddDevice.get_name)
 async def get_device_name(message : aiogram.types.Message, state : aiogram.fsm.context.FSMContext):
     await state.set_state(None)
-    utils.add_device(message.from_user.id, message.text)
+    name = message.from_user.username
+    if name is None:
+        name = message.from_user.first_name + " " + message.from_user.last_name
+    utils.add_device(message.from_user.id, message.text, name)
+    normal_name = utils.get_normal_device_name(message.text)
+    print(normal_name)
     await message.answer_document(
-        aiogram.types.input_file.FSInputFile(f'{message.text.replace(" ", "-")}.conf'),
+        aiogram.types.input_file.FSInputFile(f'{normal_name}.conf'),
         caption=f'Файл для подключения к VPN с {message.text}\nИспользуйте данный файл только для одного устройства'
     )
-    os.system(f'rm "{message.text.replace(" ", "-")}.conf"')
+    os.system(f'rm "{normal_name}.conf"')
 
 
 @router.message(aiogram.F.text=='/management')
@@ -94,8 +99,9 @@ async def manage_device(callback : aiogram.types.CallbackQuery, state : aiogram.
             )
     elif manage_type == 'file':
         name = utils.get_device_file(device_id)
+        normal_name = utils.get_normal_device_name(name)
         await callback.message.answer_document(
-            aiogram.types.input_file.FSInputFile(f'{name}.conf'),
+            aiogram.types.input_file.FSInputFile(f'{normal_name}.conf'),
             caption=f'Файл для подключения к VPN с {name}\nИспользуйте данный файл только для одного устройства'
         )
-        os.system(f'rm "{name}.conf"')
+        os.system(f'rm "{normal_name}.conf"')
