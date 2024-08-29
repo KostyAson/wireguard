@@ -58,3 +58,12 @@ def make_manage_device_keyboard(data):
     return aiogram.types.InlineKeyboardMarkup(
         inline_keyboard=keyboard
     )
+
+
+select_sub_keyboard = aiogram.types.InlineKeyboardMarkup(
+    inline_keyboard=[
+        [aiogram.types.InlineKeyboardButton(text='1 месяц', callback_data='1')],
+        [aiogram.types.InlineKeyboardButton(text='3 месяца', callback_data='3')],
+        [aiogram.types.InlineKeyboardButton(text='6 месяца', callback_data='6')]
+    ]
+)
