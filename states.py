@@ -17,3 +17,5 @@ class AdminState(aiogram.fsm.state.StatesGroup):
 
 class PayState(aiogram.fsm.state.StatesGroup):
     select_sub_type = aiogram.fsm.state.State()
+    get_email = aiogram.fsm.state.State()
+    get_sub = aiogram.fsm.state.State()

@@ -64,6 +64,12 @@ select_sub_keyboard = aiogram.types.InlineKeyboardMarkup(
     inline_keyboard=[
         [aiogram.types.InlineKeyboardButton(text='1 месяц', callback_data='1')],
         [aiogram.types.InlineKeyboardButton(text='3 месяца', callback_data='3')],
-        [aiogram.types.InlineKeyboardButton(text='6 месяца', callback_data='6')]
+        [aiogram.types.InlineKeyboardButton(text='6 месяцев', callback_data='6')]
+    ]
+)
+
+get_pay_keyboard = aiogram.types.InlineKeyboardMarkup(
+    inline_keyboard=[
+        [aiogram.types.InlineKeyboardButton(text='Я оплатил', callback_data='1')]
     ]
 )
