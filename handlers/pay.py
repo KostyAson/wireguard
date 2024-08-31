@@ -38,7 +38,7 @@ async def get_sub_type(callback : aiogram.types.CallbackQuery, state : aiogram.f
     )
 
 
-@router.message()
+@router.message(states.PayState.get_email)
 async def get_email(message : aiogram.types.Message, state : aiogram.fsm.context.FSMContext):
     month_cost = int(open('sub_cost.txt').read())
     cost = open('sub_cost.txt').read()
@@ -103,6 +103,10 @@ async def get_email(message : aiogram.types.Message, state : aiogram.fsm.context
 @router.callback_query(states.PayState.get_sub)
 async def get_payment(callback : aiogram.types.CallbackQuery, state : aiogram.fsm.context.FSMContext):
     await callback.answer()
+    if callback.data == '2':
+        await state.set_state(None)
+        await callback.message.edit_reply_markup(reply_markup=None)
+        return
     data = await state.get_data()
     id = data['id']
     sub = int(data['sub'])
