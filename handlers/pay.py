@@ -105,7 +105,7 @@ async def get_payment(callback : aiogram.types.CallbackQuery, state : aiogram.fs
     await callback.answer()
     if callback.data == '2':
         await state.set_state(None)
-        await callback.message.edit_reply_markup(reply_markup=None)
+        await callback.message.delete()
         return
     data = await state.get_data()
     id = data['id']
