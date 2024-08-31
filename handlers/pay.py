@@ -15,15 +15,19 @@ router = aiogram.Router()
 async def invoicing(message : aiogram.types.Message, state : aiogram.fsm.context.FSMContext):
     cost = int(open('sub_cost.txt').read())
     await state.set_state(states.PayState.select_sub_type)
-    await message.answer(
-f'''
-На какой срок желаете преобрести подписку?
+    ans = f'''
 1 месяц: {cost}р
-3 месяца: ~{3 * cost}р~ {(3 * cost // 100) * 85}
-6 месяцев: ~{6 * cost}р~ {(6 * cost // 100) * 70}
-''',
+3 месяца: ~{3 * cost}р~ {(3 * cost // 100) * 85}р
+6 месяцев: ~{6 * cost}р~ {(6 * cost // 100) * 70}р'''
+    keyboard = keyboards.select_sub_keyboard
+    if utils.get_user_use_free_sub(message.from_user.id):
+        ans = '1 неделя: бесплтано' + ans
+        keyboard = keyboards.select_sub_keyboard_with_free
+    ans = 'На какой срок желаете преобрести подписку?\n' + ans
+    await message.answer(
+        ans,
         parse_mode='MarkdownV2',
-        reply_markup=keyboards.select_sub_keyboard
+        reply_markup=keyboard
     )
 
 
@@ -31,6 +35,15 @@ f'''
 async def get_sub_type(callback : aiogram.types.CallbackQuery, state : aiogram.fsm.context.FSMContext):
     await callback.answer()
     await callback.message.edit_reply_markup(reply_markup=None)
+    if callback.data == '0':
+        await callback.message.answer('Подписка на неделю оформлена\nИнструкция по подключению VPN - /instruction\nУправление устройствами - /management')
+        utils.set_user_use_free_sub(callback.from_user.id)
+        utils.set_user_subscription(
+            callback.from_user.id,
+            1,
+            (dt.datetime.now() + dt.timedelta(days=7)).isoformat()
+        )
+        return
     await state.set_state(states.PayState.get_email)
     await state.set_data({'sub': callback.data})
     await callback.message.answer(

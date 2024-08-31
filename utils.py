@@ -176,3 +176,22 @@ def check_user_in_db(user_id):
 
 def get_normal_device_name(name):
     return transliterate.translit(name.replace(' ', '-'), language_code='ru', reversed=True)
+
+
+def get_user_use_free_sub(user_id):
+    conn = sqlite3.connect('db.sqlite')
+    cur = conn.cursor()
+    cur.execute(f'SELECT free_sub_used FROM users WHERE id={user_id};')
+    data = cur.fetchone()
+    cur.close()
+    conn.close()
+    return bool(data[0] is None)
+
+
+def set_user_use_free_sub(user_id):
+    conn = sqlite3.connect('db.sqlite')
+    cur = conn.cursor()
+    cur.execute(f'UPDATE users SET free_sub_used=1 WHERE id={user_id};')
+    conn.commit()
+    cur.close()
+    conn.close()
