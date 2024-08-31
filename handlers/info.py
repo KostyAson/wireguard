@@ -24,3 +24,8 @@ async def about_sub_message(message : aiogram.types.Message):
 @router.message(aiogram.F.text=='/instruction')
 async def instruction_message(message : aiogram.types.Message):
     await message.answer(answers.instruction, parse_mode='HTML')
+
+
+@router.message(aiogram.F.text=='/vpninfo')
+async def instruction_message(message : aiogram.types.Message):
+    await message.answer(answers.vpninfo)

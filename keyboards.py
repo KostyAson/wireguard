@@ -35,7 +35,7 @@ def make_manage_device_keyboard(data):
         ],
         [
             aiogram.types.InlineKeyboardButton(
-                text='Файл для подключения',
+                text='Файл/QR для подключения',
                 callback_data=f'file {device_id}'
             )   
         ],

@@ -82,9 +82,9 @@ def update_server_config():
     config_file = open('wg0.conf', 'w')
     config_file.write(config)
     config_file.close()
-    os.system('wg-quick strip wg0 > strip.txt')
+    '''os.system('wg-quick strip wg0 > strip.txt')
     os.system('wg syncconf wg0 strip.txt')
-    os.system('rm strip.txt')
+    os.system('rm strip.txt')'''
 
 
 def get_free_address():
