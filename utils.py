@@ -19,6 +19,16 @@ def check_user_sub(user_id):
     return data
 
 
+def get_user_subdate(user_id):
+    conn = sqlite3.connect('db.sqlite')
+    cur = conn.cursor()
+    cur.execute(f'SELECT subdate FROM users WHERE id={user_id};')
+    data = cur.fetchone()[0]
+    cur.close()
+    conn.close()
+    return data
+
+
 def add_user(user_id, username, refer):
     conn = sqlite3.connect('db.sqlite')
     cur = conn.cursor()

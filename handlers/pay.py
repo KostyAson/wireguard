@@ -13,22 +13,25 @@ router = aiogram.Router()
 
 @router.message(aiogram.F.text=='/pay')
 async def invoicing(message : aiogram.types.Message, state : aiogram.fsm.context.FSMContext):
-    cost = int(open('sub_cost.txt').read())
-    await state.set_state(states.PayState.select_sub_type)
-    ans = f'''
-1 месяц: {cost}р
-3 месяца: ~{3 * cost}р~ {(3 * cost // 100) * 85}р
-6 месяцев: ~{6 * cost}р~ {(6 * cost // 100) * 70}р'''
-    keyboard = keyboards.select_sub_keyboard
-    if utils.get_user_use_free_sub(message.from_user.id):
-        ans = '1 неделя: бесплтано' + ans
-        keyboard = keyboards.select_sub_keyboard_with_free
-    ans = 'На какой срок желаете преобрести подписку?\n' + ans
-    await message.answer(
-        ans,
-        parse_mode='MarkdownV2',
-        reply_markup=keyboard
-    )
+    if not utils.check_user_sub(message.from_user.id):
+        cost = int(open('sub_cost.txt').read())
+        await state.set_state(states.PayState.select_sub_type)
+        ans = f'''
+    1 месяц: {cost}р
+    3 месяца: ~{3 * cost}р~ {(3 * cost // 100) * 85}р
+    6 месяцев: ~{6 * cost}р~ {(6 * cost // 100) * 70}р'''
+        keyboard = keyboards.select_sub_keyboard
+        if utils.get_user_use_free_sub(message.from_user.id):
+            ans = '1 неделя: бесплтано' + ans
+            keyboard = keyboards.select_sub_keyboard_with_free
+        ans = 'На какой срок желаете преобрести подписку?\n' + ans
+        await message.answer(
+            ans,
+            parse_mode='MarkdownV2',
+            reply_markup=keyboard
+        )
+    else:
+        await message.answer(f'У вас уже есть действующая подписка до:\n{utils.get_user_subdate(message.from_user.id)}')
 
 
 @router.callback_query(states.PayState.select_sub_type)
