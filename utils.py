@@ -19,10 +19,13 @@ def check_user_sub(user_id):
     return data
 
 
-def add_user(user_id, username):
+def add_user(user_id, username, refer):
     conn = sqlite3.connect('db.sqlite')
     cur = conn.cursor()
-    cur.execute(f'INSERT INTO users(id, subscription, username) VALUES({user_id}, 0, "{username}");')
+    if refer is None:
+        cur.execute(f'INSERT INTO users(id, subscription, username) VALUES({user_id}, 0, "{username}");')
+    else:
+        cur.execute(f'INSERT INTO users(id, subscription, username, from_user) VALUES({user_id}, 0, "{username}", {refer});')
     conn.commit()
     cur.close()
     conn.close()
@@ -195,3 +198,32 @@ def set_user_use_free_sub(user_id):
     conn.commit()
     cur.close()
     conn.close()
+
+
+def get_user_ref(user_id):
+    conn = sqlite3.connect('db.sqlite')
+    cur = conn.cursor()
+    cur.execute(f'SELECT from_user FROM users WHERE id={user_id};')
+    data = cur.fetchone()
+    cur.close()
+    conn.close()
+    return data[0]
+
+
+def grand_ref_sub(ref_id, sub):
+    conn = sqlite3.connect('db.sqlite')
+    cur = conn.cursor()
+    if check_user_sub(ref_id):
+        cur.execute(f'SELECT subdate FROM users WHERE id={ref_id};')
+        date = dt.datetime.fromisoformat(cur.fetchone()[0])
+        date += dt.timedelta(days=7 * sub)
+        ans = True
+    else:
+        date = dt.datetime.now()
+        date += dt.timedelta(days=7 * sub)
+        ans = False
+    cur.execute(f'UPDATE users SET subscription=1,subdate="{date.isoformat()}" WHERE id={ref_id};')
+    conn.commit()
+    cur.close()
+    conn.close()
+    return ans

@@ -114,7 +114,7 @@ async def get_email(message : aiogram.types.Message, state : aiogram.fsm.context
 
 
 @router.callback_query(states.PayState.get_sub)
-async def get_payment(callback : aiogram.types.CallbackQuery, state : aiogram.fsm.context.FSMContext):
+async def get_payment(callback : aiogram.types.CallbackQuery, state : aiogram.fsm.context.FSMContext, bot :aiogram.Bot):
     await callback.answer()
     if callback.data == '2':
         await state.set_state(None)
@@ -140,3 +140,21 @@ async def get_payment(callback : aiogram.types.CallbackQuery, state : aiogram.fs
         await callback.message.answer(
             'Оплата произведена успешно!\nИнструкция по подключению VPN - /instruction\nУправление устройствами - /management'
         )
+        user_ref = utils.get_user_ref(callback.from_user.id)
+        if user_ref is not None:
+            name = callback.from_user.username
+            if name is None:
+                name = callback.from_user.first_name + " " + callback.from_user.last_name
+            else:
+                name = '@' + name
+            sub_ref = utils.grand_ref_sub(user_ref, sub)
+            if sub == 1:
+                s = '1 неделю'
+            elif sub == 3:
+                s = '3 недели'
+            else:
+                s = '6 недель'
+            if sub_ref:
+                await bot.send_message(chat_id=user_ref, text=f'Пользователь {name} перешел по вашей ссылке и оплатил подписку. Продлили вашу подписку на {s}')
+            else:
+                await bot.send_message(chat_id=user_ref, text=f'Пользователь {name} перешел по вашей ссылке и оплатил подписку. Выдали вам подписку на {s}')

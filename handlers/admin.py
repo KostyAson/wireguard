@@ -105,25 +105,28 @@ async def set_sub_cost(message : aiogram.types.Message, state : aiogram.fsm.cont
         await message.answer('Отказано в доступе')
 
 
-@router.message()
+@router.message(aiogram.F.text == '/devices_stats')
 async def devices_stats(message : aiogram.types.Message):
-    os.system('wg show > stats.txt')
-    stats = open('stats.txt').readlines()
-    os.system('rm stats.txt')
-    conn = sqlite3.connect('db.sqlite')
-    cur = conn.cursor()
-    cur.execute('SELECT public_key, username, name FROM devices;')
-    data = cur.fetchall()
-    cur.close()
-    conn.close()
-    dic = {}
-    for x in data:
-        dic[x[0]] = str(x[2]) + ' @' + str(x[1])
-    ans = ''
-    for s in stats:
-        s = s.strip()
-        if s[:4] == 'peer':
-            public_key = s.split()[1]
-            s = dic[public_key]
-        ans += s + '\n'
-    await message.answer(ans)
+    if message.from_user.id == 2096978507:
+        os.system('wg show > stats.txt')
+        stats = open('stats.txt').readlines()
+        os.system('rm stats.txt')
+        conn = sqlite3.connect('db.sqlite')
+        cur = conn.cursor()
+        cur.execute('SELECT public_key, username, name FROM devices;')
+        data = cur.fetchall()
+        cur.close()
+        conn.close()
+        dic = {}
+        for x in data:
+            dic[x[0]] = str(x[2]) + ' @' + str(x[1])
+        ans = ''
+        for s in stats:
+            s = s.strip()
+            if s[:4] == 'peer':
+                public_key = s.split()[1]
+                s = dic[public_key]
+            ans += s + '\n'
+        await message.answer(ans)
+    else:
+        await message.answer('В доступе отказано')
