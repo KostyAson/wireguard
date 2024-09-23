@@ -25,7 +25,7 @@ async def get_device_name(message : aiogram.types.Message, state : aiogram.fsm.c
     await state.set_state(None)
     name = message.from_user.username
     if name is None:
-        name = message.from_user.first_name + " " + message.from_user.last_name
+        name = str(message.from_user.first_name) + " " + (message.from_user.last_name)
     utils.add_device(message.from_user.id, message.text, name)
     normal_name = utils.get_normal_device_name(message.text)
     os.system(f'qrencode -t png -o qr.png < {normal_name}.conf')
@@ -92,7 +92,7 @@ async def manage_device(callback : aiogram.types.CallbackQuery, state : aiogram.
             text='Устройство выключено'
         )
     elif manage_type == 'on':
-        if utils.get_count_user_work_devices(callback.from_user.id) == 2:
+        if callback.from_user.id != 2096978507 and utils.get_count_user_work_devices(callback.from_user.id) == 2:
             await callback.message.answer(
                 'У вас уже включено 2 устройства.\nДля того что бы включить это устройство выключите одно из работающих устройств.'
             )
