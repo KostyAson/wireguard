@@ -123,6 +123,9 @@ async def devices_stats(message : aiogram.types.Message):
         ans = ''
         for s in stats:
             s = s.strip()
+            if 'endpoint' in s or 'allowed ips' in s:
+                continue
+            s = s.replace('latest handshake: ', '').replace('transfer: ', '')
             if s[:4] == 'peer':
                 public_key = s.split()[1]
                 s = dic[public_key]
