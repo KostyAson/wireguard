@@ -139,6 +139,7 @@ async def get_payment(callback : aiogram.types.CallbackQuery, state : aiogram.fs
             1,
             (dt.datetime.now() + dt.timedelta(days=30 * sub)).isoformat()
         )
+        utils.update_server_config()
         await callback.message.edit_reply_markup(reply_markup=None)
         await callback.message.answer(
             'Оплата произведена успешно!\nИнструкция по подключению VPN - /instruction\nУправление устройствами - /management'
