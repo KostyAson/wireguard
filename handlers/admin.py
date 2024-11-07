@@ -19,6 +19,7 @@ async def admin(message : aiogram.types.Message):
 Количество пользователей с подпиской - /count_users
 Изменить цену подписки - /change_cost
 Статистика устройств - /devices_stats
+Средняя выручка за месяц - /average_revenue
 '''
         )
     else:
@@ -133,3 +134,11 @@ async def devices_stats(message : aiogram.types.Message):
         await message.answer(ans)
     else:
         await message.answer('В доступе отказано')
+
+
+@router.message(aiogram.F.text == '/average_revenue')
+async def average_revenue(message : aiogram.types.Message):
+    if message.from_user.id == 2096978507:
+        await message.answer(str(utils.get_payers()))
+    else:
+        await message.answer('Отказано в доступе')

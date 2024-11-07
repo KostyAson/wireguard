@@ -19,7 +19,7 @@ async def invoicing(message : aiogram.types.Message, state : aiogram.fsm.context
         ans = f'''
 1 месяц: {cost}р
 3 месяца: ~{3 * cost}р~ {(3 * cost // 100) * 85}р
-6 месяцев: ~{6 * cost}р~ {(6 * cost // 100) * 70}р'''
+6 месяцев: ~{6 * cost}р~ {(6 * cost // 100) * 80}р'''
         keyboard = keyboards.select_sub_keyboard
         if utils.get_user_use_free_sub(message.from_user.id):
             ans = '1 неделя: бесплтано' + ans
@@ -67,7 +67,7 @@ async def get_email(message : aiogram.types.Message, state : aiogram.fsm.context
         cost = month_cost * 3 // 100 * 85
     elif sub == '6':
         description = 'Подписка на 6 месяцев'
-        cost = month_cost * 6 // 100 * 70
+        cost = month_cost * 6 // 100 * 80
     await state.set_state(None)
     req = requests.post(
         'https://api.yookassa.ru/v3/payments',
@@ -140,6 +140,8 @@ async def get_payment(callback : aiogram.types.CallbackQuery, state : aiogram.fs
             (dt.datetime.now() + dt.timedelta(days=30 * sub)).isoformat()
         )
         utils.update_server_config()
+        if callback.from_user.username is not None:
+            await bot.send_message(2096978507, f'Пользователь @{callback.from_user.username} оплатил подписку на {sub}')
         await callback.message.edit_reply_markup(reply_markup=None)
         await callback.message.answer(
             'Оплата произведена успешно!\nИнструкция по подключению VPN - /instruction\nУправление устройствами - /management'
