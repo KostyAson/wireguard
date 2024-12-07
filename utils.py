@@ -247,3 +247,13 @@ def get_payers():
     cur.close()
     conn.close()
     return len(data) * 200
+
+
+def get_all_users():
+    conn = sqlite3.connect('db.sqlite')
+    cur = conn.cursor()
+    cur.execute('SELECT id FROM users WHERE subscription=1;')
+    data = cur.fetchall()
+    cur.close()
+    conn.close()
+    return list(map(lambda x : x[0], data))

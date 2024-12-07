@@ -142,3 +142,21 @@ async def average_revenue(message : aiogram.types.Message):
         await message.answer(str(utils.get_payers()))
     else:
         await message.answer('Отказано в доступе')
+
+
+@router.message(aiogram.F.text == '/send_message')
+async def get_send_message(message : aiogram.types.Message, state : aiogram.fsm.context.FSMContext):
+    if message.from_user.id == 2096978507:
+        await message.answer('Напишите сообщение для пользователей')
+        await state.set_state(states.AdminState.send_message)
+    else:
+        await message.answer('Отказано в доступе')
+
+
+@router.message(states.AdminState.send_message)
+async def send_message(message : aiogram.types.Message,
+                       bot : aiogram.Bot,
+                       state : aiogram.fsm.context.FSMContext):
+    for id in utils.get_all_users():
+        await bot.send_message(chat_id=id, text=message.text)
+    await state.set_state(None)
