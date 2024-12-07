@@ -20,6 +20,7 @@ async def admin(message : aiogram.types.Message):
 Изменить цену подписки - /change_cost
 Статистика устройств - /devices_stats
 Средняя выручка за месяц - /average_revenue
+Рассылка сообщений - /send_message
 '''
         )
     else:
