@@ -180,7 +180,7 @@ async def add_ip_command(message : aiogram.types.Message, state : aiogram.fsm.co
     f'target_ip="{ip}/32"' + 
     '''gateway=`ip route | awk '/default/ {print $3; exit}'`
     gateway_device=`ip route | awk '/default/ {print $5; exit}'`
-    ip route add $target_ip via $gateway dev $gateway_device)
+    ip route add $target_ip via $gateway dev $gateway_device
     ''')
     await message.answer('ip добавлены')
     await state.set_state(None)
