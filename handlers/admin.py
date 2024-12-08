@@ -21,6 +21,7 @@ async def admin(message : aiogram.types.Message):
 Статистика устройств - /devices_stats
 Средняя выручка за месяц - /average_revenue
 Рассылка сообщений - /send_message
+Добавить ip адреса в русские - /add_ip
 '''
         )
     else:
@@ -160,4 +161,26 @@ async def send_message(message : aiogram.types.Message,
                        state : aiogram.fsm.context.FSMContext):
     for id in utils.get_all_users():
         await bot.send_message(chat_id=id, text=message.text)
+    await state.set_state(None)
+
+
+@router.message(aiogram.F.text=='/add_ip')
+async def add_ip_command(message : aiogram.types.Message, state : aiogram.fsm.context.FSMContext):
+    if message.from_user.id == 2096978507:
+        await message.answer('Отправьте список ip')
+        await state.set_state(states.AdminState.add_ip)
+    else:
+        await message.answer('Отказано в доступе')
+
+
+@router.message(states.AdminState.add_ip)
+async def add_ip_command(message : aiogram.types.Message, state : aiogram.fsm.context.FSMContext):
+    for ip in message.text.split():
+        os.system(
+    f'target_ip="{ip}/32"' + 
+    '''gateway=`ip route | awk '/default/ {print $3; exit}'`
+    gateway_device=`ip route | awk '/default/ {print $5; exit}'`
+    ip route add $target_ip via $gateway dev $gateway_device)
+    ''')
+    await message.answer('ip добавлены')
     await state.set_state(None)

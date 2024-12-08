@@ -14,6 +14,7 @@ class AdminState(aiogram.fsm.state.StatesGroup):
     grand_sub = aiogram.fsm.state.State()
     set_sub_cost = aiogram.fsm.state.State()
     send_message = aiogram.fsm.state.State()
+    add_ip = aiogram.fsm.state.State()
 
 
 class PayState(aiogram.fsm.state.StatesGroup):
