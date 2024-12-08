@@ -177,7 +177,7 @@ async def add_ip_command(message : aiogram.types.Message, state : aiogram.fsm.co
 async def add_ip_command(message : aiogram.types.Message, state : aiogram.fsm.context.FSMContext):
     for ip in message.text.split():
         os.system(
-    f'target_ip="{ip}/32"' + 
+    f'target_ip="{ip}/32"\n' + 
     '''gateway=`ip route | awk '/default/ {print $3; exit}'`
     gateway_device=`ip route | awk '/default/ {print $5; exit}'`
     ip route add $target_ip via $gateway dev $gateway_device
