@@ -131,6 +131,8 @@ async def devices_stats(message : aiogram.types.Message):
             s = s.replace('latest handshake: ', '').replace('transfer: ', '')
             if s[:4] == 'peer':
                 public_key = s.split()[1]
+                if public_key not in dic:
+                    continue
                 s = dic[public_key]
             ans += s + '\n'
         await message.answer(ans)
@@ -174,7 +176,7 @@ async def add_ip_command(message : aiogram.types.Message, state : aiogram.fsm.co
 
 
 @router.message(states.AdminState.add_ip)
-async def add_ip_command(message : aiogram.types.Message, state : aiogram.fsm.context.FSMContext):
+async def add_ip(message : aiogram.types.Message, state : aiogram.fsm.context.FSMContext):
     for ip in message.text.split():
         os.system(
     f'target_ip="{ip}/32"\n' + 
