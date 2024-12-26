@@ -18,7 +18,6 @@ dp.include_router(handlers.info.router)
 dp.include_router(handlers.pay.router)
 dp.include_router(handlers.management.router)
 dp.include_router(handlers.admin.router)
-dp.include_router(handlers.ref_system.router)
 
 
 async def main():
