@@ -38,7 +38,8 @@ def make_manage_device_keyboard(data):
                 text='Файл/QR для подключения 📄',
                 callback_data=f'file {device_id}'
             )   
-        ]
+        ],
+        []
     ]
     if is_work:
         keyboard[-1].append(

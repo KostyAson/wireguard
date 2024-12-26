@@ -23,3 +23,10 @@ async def start_message(message : aiogram.types.Message, command : aiogram.filte
 @router.message(aiogram.F.text=='/instruction')
 async def instruction_message(message : aiogram.types.Message):
     await message.answer(answers.instruction, parse_mode='HTML', disable_web_page_preview=True)
+
+
+@router.message(aiogram.F.text=='/ref')
+async def about_sub_message(message : aiogram.types.Message):
+    await message.answer(
+        f'У нас действует реферальная система 🤝\n\nЕсли пользователь перешел в бота по вашей ссылке, а после оплатил подписку на N месяцев, мы начислим вам N недель подписки\n\nВаша реферальная ссылка:\nhttps://t.me/AVPNmanagerBot?start={message.from_user.id}\n\n'
+    )
