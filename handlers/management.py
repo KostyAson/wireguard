@@ -14,8 +14,11 @@ router = aiogram.Router()
 @router.message(aiogram.F.text=='/add')
 async def add_device(message : aiogram.types.Message, state : aiogram.fsm.context.FSMContext):
     if utils.check_user_sub(message.from_user.id):
-        await state.set_state(states.AddDevice.get_name)
-        await message.answer('Отправьте название для нового устройства')
+        if len(utils.get_user_devices(message.from_user.id)) < 2 or message.from_user.id == 2096978507:
+            await state.set_state(states.AddDevice.get_name)
+            await message.answer('Отправьте название для нового устройства 🖊')
+        else:
+            await message.answer('Вы достигли лимита в 2 устройства ❌\n\nДля добавления нового устройства, вы можете удалить одно из созданных - /management 🗑')
     else:
         await message.answer('Сначала оплатите подписку - /pay')
 
@@ -84,23 +87,18 @@ async def manage_device(callback : aiogram.types.CallbackQuery, state : aiogram.
     if manage_type == 'del':
         utils.delete_device(device_id)
         await callback.message.answer(
-            text='Устройство удалено'
+            text='Устройство удалено 🗑'
         )
     elif manage_type == 'off':
         utils.change_work_device(device_id, 0)
         await callback.message.answer(
-            text='Устройство выключено'
+            text='Устройство выключено 🔴'
         )
     elif manage_type == 'on':
-        if callback.from_user.id != 2096978507 and utils.get_count_user_work_devices(callback.from_user.id) == 2:
-            await callback.message.answer(
-                'У вас уже включено 2 устройства.\nДля того что бы включить это устройство выключите одно из работающих устройств.'
-            )
-        else:
-            utils.change_work_device(device_id, 1)
-            await callback.message.answer(
-                text='Устройство включено'
-            )
+        utils.change_work_device(device_id, 1)
+        await callback.message.answer(
+            text='Устройство включено  🟢'
+        )
     elif manage_type == 'file':
         name = utils.get_device_file(device_id)
         normal_name = utils.get_normal_device_name(name)

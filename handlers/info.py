@@ -20,11 +20,6 @@ async def start_message(message : aiogram.types.Message, command : aiogram.filte
     await message.answer(text=answers.start, parse_mode='HTML', disable_web_page_preview=True)
 
 
-@router.message(aiogram.F.text=='/subinfo')
-async def about_sub_message(message : aiogram.types.Message):
-    await message.answer(answers.subinfo.replace('{cost}', open('sub_cost.txt').read()))
-
-
 @router.message(aiogram.F.text=='/instruction')
 async def instruction_message(message : aiogram.types.Message):
     await message.answer(answers.instruction, parse_mode='HTML', disable_web_page_preview=True)

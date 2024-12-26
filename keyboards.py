@@ -29,29 +29,28 @@ def make_manage_device_keyboard(data):
     keyboard = [
         [
             aiogram.types.InlineKeyboardButton(
-                text='Удалить',
+                text='Удалить 🗑',
                 callback_data=f'del {device_id}'
             )
         ],
         [
             aiogram.types.InlineKeyboardButton(
-                text='Файл/QR для подключения',
+                text='Файл/QR для подключения 📄',
                 callback_data=f'file {device_id}'
             )   
-        ],
-        []
+        ]
     ]
     if is_work:
         keyboard[-1].append(
             aiogram.types.InlineKeyboardButton(
-                text='Отклюить',
+                text='Отключить 🔴',
                 callback_data=f'off {device_id}'
             )
         )
     else:
         keyboard[-1].append(
             aiogram.types.InlineKeyboardButton(
-                text='Вклюить',
+                text='Включить 🟢',
                 callback_data=f'on {device_id}'
             )
         )
@@ -79,7 +78,7 @@ select_sub_keyboard_with_free = aiogram.types.InlineKeyboardMarkup(
 
 get_pay_keyboard = aiogram.types.InlineKeyboardMarkup(
     inline_keyboard=[
-        [aiogram.types.InlineKeyboardButton(text='Я оплатил', callback_data='1')],
-        [aiogram.types.InlineKeyboardButton(text='Передумал оплачивать', callback_data='2')]
+        [aiogram.types.InlineKeyboardButton(text='Я оплатил ✅', callback_data='1')],
+        [aiogram.types.InlineKeyboardButton(text='Передумал оплачивать ❌', callback_data='2')]
     ]
 )

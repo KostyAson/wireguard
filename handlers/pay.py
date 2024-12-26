@@ -39,7 +39,7 @@ async def get_sub_type(callback : aiogram.types.CallbackQuery, state : aiogram.f
     await callback.answer()
     await callback.message.edit_reply_markup(reply_markup=None)
     if callback.data == '0':
-        await callback.message.answer('Подписка на неделю оформлена\nИнструкция по подключению VPN - /instruction\nУправление устройствами - /management')
+        await callback.message.answer('Подписка на неделю оформлена ✅\n\nИнструкция по подключению VPN - /instruction 📄\nУправление устройствами - /management ⚙')
         utils.set_user_use_free_sub(callback.from_user.id)
         utils.set_user_subscription(
             callback.from_user.id,
@@ -50,7 +50,7 @@ async def get_sub_type(callback : aiogram.types.CallbackQuery, state : aiogram.f
     await state.set_state(states.PayState.get_email)
     await state.set_data({'sub': callback.data})
     await callback.message.answer(
-        'Введите вашу почту, на нее отправим чек'
+        'Введите вашу почту, на нее отправим чек 🖊'
     )
 
 
@@ -132,7 +132,7 @@ async def get_payment(callback : aiogram.types.CallbackQuery, state : aiogram.fs
     )
     data = req.json()
     if data['status'] != 'succeeded':
-        await callback.message.answer('Вы еще не оплатили подписку')
+        await callback.message.answer('Вы еще не оплатили подписку ❌')
     else:
         utils.set_user_subscription(
             callback.from_user.id,
@@ -144,7 +144,7 @@ async def get_payment(callback : aiogram.types.CallbackQuery, state : aiogram.fs
             await bot.send_message(2096978507, f'Пользователь @{callback.from_user.username} оплатил подписку на {sub}')
         await callback.message.edit_reply_markup(reply_markup=None)
         await callback.message.answer(
-            'Оплата произведена успешно!\nИнструкция по подключению VPN - /instruction\nУправление устройствами - /management'
+            'Оплата произведена успешно! ✅\n\nИнструкция по подключению VPN - /instruction 📄\n\nУправление устройствами - /management ⚙'
         )
         user_ref = utils.get_user_ref(callback.from_user.id)
         if user_ref is not None:
