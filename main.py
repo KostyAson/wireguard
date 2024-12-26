@@ -6,7 +6,6 @@ import handlers.management
 import handlers.admin
 import dotenv
 import os
-import handlers.ref_system
 import utils
 
 dotenv.load_dotenv('.env')
