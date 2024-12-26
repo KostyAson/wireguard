@@ -28,5 +28,6 @@ async def instruction_message(message : aiogram.types.Message):
 @router.message(aiogram.F.text=='/ref')
 async def about_sub_message(message : aiogram.types.Message):
     await message.answer(
-        answers.ref_system.replace('{id}', str(message.from_user.id))
+        answers.ref_system.replace('{id}', str(message.from_user.id)),
+        disable_web_page_preview=True
     )
