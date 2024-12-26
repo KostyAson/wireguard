@@ -17,7 +17,7 @@ async def start_message(message : aiogram.types.Message, command : aiogram.filte
         if name is None:
             name = str(message.from_user.first_name + " " + message.from_user.last_name)
         utils.add_user(message.from_user.id, name, refer)
-    await message.answer(text=answers.start)
+    await message.answer(text=answers.start, parse_mode='HTML', disable_web_page_preview=True)
 
 
 @router.message(aiogram.F.text=='/subinfo')
@@ -27,9 +27,4 @@ async def about_sub_message(message : aiogram.types.Message):
 
 @router.message(aiogram.F.text=='/instruction')
 async def instruction_message(message : aiogram.types.Message):
-    await message.answer(answers.instruction, parse_mode='HTML')
-
-
-@router.message(aiogram.F.text=='/vpninfo')
-async def instruction_message(message : aiogram.types.Message):
-    await message.answer(answers.vpninfo)
+    await message.answer(answers.instruction, parse_mode='HTML', disable_web_page_preview=True)
