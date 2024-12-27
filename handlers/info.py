@@ -15,7 +15,7 @@ async def start_message(message : aiogram.types.Message, command : aiogram.filte
             refer = None
         name = message.from_user.username
         if name is None:
-            name = str(message.from_user.first_name + " " + message.from_user.last_name)
+            name = str(message.from_user.first_name) + " " + str(message.from_user.last_name)
         utils.add_user(message.from_user.id, name, refer)
     await message.answer(text=answers.start, parse_mode='HTML', disable_web_page_preview=True)
 
