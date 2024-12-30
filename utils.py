@@ -257,3 +257,10 @@ def get_all_users():
     cur.close()
     conn.close()
     return list(map(lambda x : x[0], data))
+
+
+def get_user_username(message):
+    name = message.from_user.username
+    if name is None:
+        name = str(message.from_user.first_name) + " " + str(message.from_user.last_name)
+    return name

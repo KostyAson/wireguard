@@ -7,12 +7,14 @@ import keyboards
 import states
 import requests
 import uuid
+import log
 
 router = aiogram.Router()
 
 
 @router.message(aiogram.F.text=='/pay')
 async def invoicing(message : aiogram.types.Message, state : aiogram.fsm.context.FSMContext):
+    log.logger.info(f"Пользователь {utils.get_user_username(message)} отправил комманду pay")
     if not utils.check_user_sub(message.from_user.id):
         cost = int(open('sub_cost.txt').read())
         await state.set_state(states.PayState.select_sub_type)
@@ -39,6 +41,7 @@ async def get_sub_type(callback : aiogram.types.CallbackQuery, state : aiogram.f
     await callback.answer()
     await callback.message.edit_reply_markup(reply_markup=None)
     if callback.data == '0':
+        log.logger.info(f"Пользователь {utils.get_user_username(callback)} взял пробную подписку")
         await callback.message.answer('Подписка на неделю оформлена ✅\n\nИнструкция по подключению VPN - /instruction 📄\nУправление устройствами - /management ⚙')
         utils.set_user_use_free_sub(callback.from_user.id)
         utils.set_user_subscription(
@@ -160,6 +163,7 @@ async def get_payment(callback : aiogram.types.CallbackQuery, state : aiogram.fs
                 s = '3 недели'
             else:
                 s = '6 недель'
+            log.logger.info(f"Пользователь {utils.get_user_username(callback)} оплатил подписку на {s}")
             if sub_ref:
                 await bot.send_message(chat_id=user_ref, text=f'Пользователь {name} перешел по вашей ссылке и оплатил подписку. Продлили вашу подписку на {s}')
             else:

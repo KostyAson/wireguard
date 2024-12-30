@@ -7,12 +7,14 @@ import keyboards
 import utils
 import states
 import os
+import log
 
 router = aiogram.Router()
 
 
 @router.message(aiogram.F.text=='/add')
 async def add_device(message : aiogram.types.Message, state : aiogram.fsm.context.FSMContext):
+    log.logger.info(f"Пользователь {utils.get_user_username(message)} отправил комманду add")
     if utils.check_user_sub(message.from_user.id):
         if len(utils.get_user_devices(message.from_user.id)) < 2 or message.from_user.id == 2096978507:
             await state.set_state(states.AddDevice.get_name)
@@ -25,6 +27,7 @@ async def add_device(message : aiogram.types.Message, state : aiogram.fsm.contex
 
 @router.message(states.AddDevice.get_name)
 async def get_device_name(message : aiogram.types.Message, state : aiogram.fsm.context.FSMContext):
+    log.logger.info(f"Пользователь {utils.get_user_username(message)} добавил новое устройство")
     await state.set_state(None)
     name = message.from_user.username
     if name is None:
@@ -45,6 +48,7 @@ async def get_device_name(message : aiogram.types.Message, state : aiogram.fsm.c
 
 @router.message(aiogram.F.text=='/management')
 async def device_management(message : aiogram.types.Message, state : aiogram.fsm.context.FSMContext):
+    log.logger.info(f"Пользователь {utils.get_user_username(message)} отправил комманду management")
     if utils.check_user_sub(message.from_user.id):
         keyboard = keyboards.make_choose_device_keyboard(message.from_user.id)
         if not keyboard:
@@ -85,21 +89,25 @@ async def manage_device(callback : aiogram.types.CallbackQuery, state : aiogram.
     manage_type = data[0]
     device_id = data[1]
     if manage_type == 'del':
+        log.logger.info(f"Пользователь {utils.get_user_username(callback)} удалил устройство")
         utils.delete_device(device_id)
         await callback.message.answer(
             text='Устройство удалено 🗑'
         )
     elif manage_type == 'off':
+        log.logger.info(f"Пользователь {utils.get_user_username(callback)} отключил устройство")
         utils.change_work_device(device_id, 0)
         await callback.message.answer(
             text='Устройство выключено 🔴'
         )
     elif manage_type == 'on':
+        log.logger.info(f"Пользователь {utils.get_user_username(callback)} включил устройство")
         utils.change_work_device(device_id, 1)
         await callback.message.answer(
             text='Устройство включено  🟢'
         )
     elif manage_type == 'file':
+        log.logger.info(f"Пользователь {utils.get_user_username(callback)} получил данные для подключения устройства")
         name = utils.get_device_file(device_id)
         normal_name = utils.get_normal_device_name(name)
         await callback.message.answer_document(
