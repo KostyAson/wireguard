@@ -124,6 +124,7 @@ async def devices_stats(message : aiogram.types.Message):
         for x in data:
             dic[x[0]] = str(x[2]) + ' @' + str(x[1])
         ans = ''
+        c = 0
         for s in stats:
             s = s.strip()
             if 'endpoint' in s or 'allowed ips' in s:
@@ -135,7 +136,12 @@ async def devices_stats(message : aiogram.types.Message):
                     continue
                 s = dic[public_key]
             ans += s + '\n'
-        await message.answer(ans)
+            if c % 20 == 0 and c != 0:
+                await message.answer(ans)
+                ans = ''
+            c += 1
+        if ans:
+            await message.answer(ans)
     else:
         await message.answer('В доступе отказано')
 

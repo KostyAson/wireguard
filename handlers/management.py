@@ -31,7 +31,7 @@ async def get_device_name(message : aiogram.types.Message, state : aiogram.fsm.c
     await state.set_state(None)
     name = message.from_user.username
     if name is None:
-        name = str(message.from_user.first_name) + " " + (message.from_user.last_name)
+        name = str(message.from_user.first_name) + " " + str(message.from_user.last_name)
     utils.add_device(message.from_user.id, message.text, name)
     normal_name = utils.get_normal_device_name(message.text)
     os.system(f'qrencode -t png -o qr.png < {normal_name}.conf')
