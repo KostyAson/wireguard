@@ -169,7 +169,10 @@ async def control_sub(bot : aiogram.Bot):
             date = dt.datetime.fromisoformat(date)
             if dt.datetime.now() >= date:
                 cur.execute(f'UPDATE users SET subscription=0 WHERE id={id};')
-                await bot.send_message(id, 'Истек срок действия вашей подписки\nОплатить подписку - /pay')
+                try:
+                    await bot.send_message(id, 'Истек срок действия вашей подписки\nОплатить подписку - /pay')
+                except:
+                    pass
         conn.commit()
         cur.close()
         conn.close()
