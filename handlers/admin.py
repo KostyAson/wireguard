@@ -22,6 +22,7 @@ async def admin(message : aiogram.types.Message):
 Средняя выручка за месяц - /average_revenue
 Рассылка сообщений - /send_message
 Добавить ip адреса в русские - /add_ip
+Отправить сообщение конкретному пользователю - /send_to_user
 '''
         )
     else:
@@ -191,4 +192,23 @@ async def add_ip(message : aiogram.types.Message, state : aiogram.fsm.context.FS
     ip route add $target_ip via $gateway dev $gateway_device
     ''')
     await message.answer('ip добавлены')
+    await state.set_state(None)
+
+
+@router.message(aiogram.F.text=='/send_to_user')
+async def send_to_user(message : aiogram.types.Message, state : aiogram.fsm.context.FSMContext):
+    await state.set_state(states.AdminState.grand_sub)
+    await message.answer(
+        'На первой строке отправьте id пользователя, начиная со второй само сообщение'
+    )
+    await state.set_state(states.AdminState.send_to_user)
+
+
+@router.message(states.AdminState.send_to_user)
+async def send_message_to_user(message : aiogram.types.Message,
+                       bot : aiogram.Bot,
+                       state : aiogram.fsm.context.FSMContext):
+    id = int(message.text.split('\n')[0])
+    text = '\n'.join(message.text.split('\n')[1:])
+    await bot.send_message(chat_id=id, text=text)
     await state.set_state(None)
