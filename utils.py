@@ -63,7 +63,7 @@ def get_user_devices(user_id):
 def add_device(user_id, name, username):
     conn = sqlite3.connect('db.sqlite')
     cur = conn.cursor()
-    work = 1 if len(get_user_devices(user_id)) < 2 else 0
+    work = 1
     name = get_normal_device_name(name)
     os.system(f'wg genkey | tee {name}_private.key | wg pubkey > {name}_public.key')
     private = open(f'{name}_private.key').read().strip()
