@@ -23,6 +23,7 @@ async def admin(message : aiogram.types.Message):
 Рассылка сообщений - /send_message
 Добавить ip адреса в русские - /add_ip
 Отправить сообщение конкретному пользователю - /send_to_user
+Получить сроки подписок пользователей - /get_users_subscriptions
 '''
         )
     else:
@@ -212,3 +213,8 @@ async def send_message_to_user(message : aiogram.types.Message,
     text = '\n'.join(message.text.split('\n')[1:])
     await bot.send_message(chat_id=id, text=text)
     await state.set_state(None)
+
+
+@router.message(aiogram.F.text=='/get_users_subscriptions')
+async def get_users_subscriptions(message : aiogram.types.Message):
+    message.answer(text=utils.get_users_subscriptions())

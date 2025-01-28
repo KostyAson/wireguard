@@ -267,3 +267,21 @@ def get_user_username(message):
     if name is None:
         name = str(message.from_user.first_name) + " " + str(message.from_user.last_name)
     return name
+
+
+import sqlite3
+import datetime as dt
+
+
+def get_users_subscriptions():
+    db = sqlite3.connect('db.sqlite')
+    cur = db.cursor()
+    cur.execute("SELECT subdate, username FROM users WHERE subscription=1;")
+    data = map(lambda x : (dt.datetime.fromisoformat(x[0]), x[1]), cur.fetchall())
+    data = sorted(filter(lambda x : x[0] < dt.datetime(year=2050, month=1, day=1), data))
+    s = ''
+    for x in data:
+        total = (x[0] - dt.datetime.now()).total_seconds()
+        days = int(total / 60 / 60 / 24)
+        s += f'{days}:{int((total - days * 24 * 60 * 60) / 60 / 60)} @{x[1]}\n'
+    return s[:-1]
