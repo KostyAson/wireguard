@@ -217,4 +217,4 @@ async def send_message_to_user(message : aiogram.types.Message,
 
 @router.message(aiogram.F.text=='/get_users_subscriptions')
 async def get_users_subscriptions(message : aiogram.types.Message):
-    message.answer(text=utils.get_users_subscriptions())
+    await message.answer(text=utils.get_users_subscriptions())

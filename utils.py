@@ -284,4 +284,6 @@ def get_users_subscriptions():
         total = (x[0] - dt.datetime.now()).total_seconds()
         days = int(total / 60 / 60 / 24)
         s += f'{days}:{int((total - days * 24 * 60 * 60) / 60 / 60)} @{x[1]}\n'
+    cur.close()
+    db.close()
     return s[:-1]
