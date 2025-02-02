@@ -269,10 +269,6 @@ def get_user_username(message):
     return name
 
 
-import sqlite3
-import datetime as dt
-
-
 def get_users_subscriptions():
     db = sqlite3.connect('db.sqlite')
     cur = db.cursor()

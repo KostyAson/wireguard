@@ -5,6 +5,7 @@ import aiogram.fsm.context
 import utils
 import sqlite3
 import os
+import asyncio
 
 router = aiogram.Router()
 
@@ -170,7 +171,11 @@ async def send_message(message : aiogram.types.Message,
                        bot : aiogram.Bot,
                        state : aiogram.fsm.context.FSMContext):
     for id in utils.get_all_users():
-        await bot.send_message(chat_id=id, text=message.text)
+        try:
+            await bot.send_message(chat_id=id, text=message.text)
+        except:
+            continue
+        await asyncio.sleep(0.1)
     await state.set_state(None)
 
 
