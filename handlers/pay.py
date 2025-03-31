@@ -7,9 +7,13 @@ import keyboards
 import states
 import requests
 import uuid
+import os
+import dotenv
 import log
 
 router = aiogram.Router()
+
+dotenv.load_dotenv('.env')
 
 
 @router.message(aiogram.F.text=='/pay')
@@ -104,7 +108,7 @@ async def get_email(message : aiogram.types.Message, state : aiogram.fsm.context
                 ]
             }
         },
-        auth=('441601', 'live_hNO32idIQ5jcuFy02G3VUAtbt4RXJfK9rySVW5tDh9k')
+        auth=('441601', os.getenv('youkassa'))
     )
     data = req.json()
     await state.set_data({'id': data['id'], 'sub': sub})
@@ -129,7 +133,7 @@ async def get_payment(callback : aiogram.types.CallbackQuery, state : aiogram.fs
     sub = int(data['sub'])
     req = requests.get(
         f'https://api.yookassa.ru/v3/payments/{id}',
-        auth=('441601', 'live_hNO32idIQ5jcuFy02G3VUAtbt4RXJfK9rySVW5tDh9k')
+        auth=('441601', os.getenv('youkassa'))
     )
     data = req.json()
     if data['status'] != 'succeeded':
