@@ -54,6 +54,7 @@ async def grand_sub(message : aiogram.types.Message, state : aiogram.fsm.context
             (dt.datetime.now() + dt.timedelta(days=days)).isoformat()
         )
         await message.answer('Подписка выдана')
+        utils.update_server_config()
     else:
         await message.answer('Отказано в доступе')
 
