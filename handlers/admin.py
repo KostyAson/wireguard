@@ -6,6 +6,7 @@ import utils
 import sqlite3
 import os
 import asyncio
+import datetime as dt
 
 router = aiogram.Router()
 
@@ -37,18 +38,20 @@ async def admin(message : aiogram.types.Message):
 async def grand_sub_command(message : aiogram.types.Message, state : aiogram.fsm.context.FSMContext):
     await state.set_state(states.AdminState.grand_sub)
     await message.answer(
-        'Отправьте id пользователя которому нужно выдать подписку'
+        'Отправьте сообщение в формате\n{id} {срок в днях}'
     )
 
 
 @router.message(states.AdminState.grand_sub)
 async def grand_sub(message : aiogram.types.Message, state : aiogram.fsm.context.FSMContext):
     await state.set_state(None)
+    id, days = message.text.split()
+    days = int(days)
     if message.from_user.id == 2096978507:
         utils.set_user_subscription(
-            message.text,
-            1,
-            '2050-09-26T23:15:43.227305'
+            id,
+            bool(days),
+            (dt.datetime.now() + dt.timedelta(days=days)).isoformat()
         )
         await message.answer('Подписка выдана')
     else:

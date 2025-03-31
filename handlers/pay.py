@@ -19,9 +19,7 @@ async def invoicing(message : aiogram.types.Message, state : aiogram.fsm.context
         cost = int(open('sub_cost.txt').read())
         await state.set_state(states.PayState.select_sub_type)
         ans = f'''
-1 месяц: {cost}р
-3 месяца: ~{3 * cost}р~ {(3 * cost // 100) * 85}р
-6 месяцев: ~{6 * cost}р~ {(6 * cost // 100) * 80}р'''
+1 месяц: {cost}р'''
         keyboard = keyboards.select_sub_keyboard
         if utils.get_user_use_free_sub(message.from_user.id):
             ans = '1 неделя: бесплтано' + ans
