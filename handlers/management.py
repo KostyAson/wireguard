@@ -1,8 +1,6 @@
 import aiogram
-import aiogram.filters
 import aiogram.fsm
 import aiogram.fsm.context
-import aiogram.fsm.state
 import keyboards
 import utils
 import states

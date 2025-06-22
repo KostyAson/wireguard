@@ -29,13 +29,14 @@ def get_user_subdate(user_id):
     return data
 
 
-def add_user(user_id, username, refer):
+def add_user(user_id, username, refer, from_ad):
     conn = sqlite3.connect('db.sqlite')
     cur = conn.cursor()
     if refer is None:
-        cur.execute(f'INSERT INTO users(id, subscription, username) VALUES({user_id}, 0, "{username}");')
-    else:
-        cur.execute(f'INSERT INTO users(id, subscription, username, from_user) VALUES({user_id}, 0, "{username}", {refer});')
+        refer = 'NULL'
+    if from_ad is None:
+        from_ad = 'NULL'
+    cur.execute(f'INSERT INTO users(id, subscription, username, from_user, from_ad) VALUES({user_id}, 0, "{username}", {refer}, {from_ad});')
     conn.commit()
     cur.close()
     conn.close()
@@ -296,4 +297,29 @@ def add_ad(title, description, limit, free_time, message):
     if free_time is not None:
         cur.execute(f'UPDATE ads SET "free_time"={free_time} WHERE id={row_id};')
     db.commit()
+    cur.close()
+    db.close()
     return row_id
+
+
+def get_count_ad(id):
+    db = sqlite3.connect('db.sqlite')
+    cur = db.cursor()
+    cur.execute(f'SELECT id FROM users WHERE from_user={id};')
+    data = cur.fetchall()
+    cur.close()
+    db.close()
+    return len(data)
+
+
+def get_ad_info(id):
+    db = sqlite3.connect('db.sqlite')
+    cur = db.cursor()
+    try:
+        cur.execute(f'SELECT title, description, limit, free_time, message FROM ads WHERE id={id};')
+        data = cur.fetchone()
+    except:
+        return None
+    cur.close()
+    db.close()
+    return data

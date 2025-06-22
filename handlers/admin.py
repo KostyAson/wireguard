@@ -26,6 +26,7 @@ async def admin(message : aiogram.types.Message):
 Добавить ip адреса в русские - /add_ip
 Отправить сообщение конкретному пользователю - /send_to_user
 Получить сроки подписок пользователей - /get_users_subscriptions
+Добавить рекламу - /add_ad
 '''
         )
     else:
