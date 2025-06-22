@@ -295,7 +295,7 @@ def add_ad(title, description, limit, free_time, message):
     if limit is not None:
         cur.execute(f'UPDATE ads SET "limit"={limit} WHERE id={row_id};')
     if free_time is not None:
-        cur.execute(f'UPDATE ads SET "free_time"={free_time} WHERE id={row_id};')
+        cur.execute(f'UPDATE ads SET free_time={free_time} WHERE id={row_id};')
     db.commit()
     cur.close()
     db.close()
@@ -316,7 +316,7 @@ def get_ad_info(id):
     db = sqlite3.connect('db.sqlite')
     cur = db.cursor()
     try:
-        cur.execute(f'SELECT title, description, limit, free_time, message FROM ads WHERE id={id};')
+        cur.execute(f'SELECT title, description, "limit", free_time, message FROM ads WHERE id={id};')
         data = cur.fetchone()
     except Exception as exc:
         print(exc)
