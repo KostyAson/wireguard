@@ -1,5 +1,3 @@
-import aiogram.utils
-import aiogram.utils.keyboard
 import utils
 import aiogram
 

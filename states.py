@@ -18,6 +18,14 @@ class AdminState(aiogram.fsm.state.StatesGroup):
     send_to_user = aiogram.fsm.state.State()
 
 
+class AddAdState(aiogram.fsm.state.StatesGroup):
+    get_title = aiogram.fsm.state.State()
+    get_description = aiogram.fsm.state.State()
+    get_limit = aiogram.fsm.state.State()
+    get_free_time = aiogram.fsm.state.State()
+    get_message = aiogram.fsm.state.State()
+
+
 class PayState(aiogram.fsm.state.StatesGroup):
     select_sub_type = aiogram.fsm.state.State()
     get_email = aiogram.fsm.state.State()

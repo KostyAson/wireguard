@@ -226,4 +226,71 @@ async def send_message_to_user(message : aiogram.types.Message,
 
 @router.message(aiogram.F.text=='/get_users_subscriptions')
 async def get_users_subscriptions(message : aiogram.types.Message):
-    await message.answer(text=utils.get_users_subscriptions())
+    if message.from_user.id == 2096978507:
+        await message.answer(text=utils.get_users_subscriptions())
+
+
+@router.message(aiogram.F.text=='/add_ad')
+async def add_ad(message : aiogram.types.Message, state : aiogram.fsm.context.FSMContext):
+    if message.from_user.id != 2096978507:
+        return
+    await state.set_state(states.AddAdState.get_title)
+    await message.answer('Напишите название')
+
+
+@router.message(states.AddAdState.get_title)
+async def get_title_ad(message : aiogram.types.Message, state : aiogram.fsm.context.FSMContext):
+    await state.update_data(title=message.text)
+    await state.set_state(states.AddAdState.get_description)
+    await message.answer('Напишите описание, или None если не надо')
+
+
+@router.message(states.AddAdState.get_description)
+async def get_description_ad(message : aiogram.types.Message, state : aiogram.fsm.context.FSMContext):
+    if message.text.lower() == 'None':
+        data = None
+    else:
+        data = message.text()
+    await state.update_data(description=data)
+    await state.set_state(states.AddAdState.get_limit)
+    await message.answer('Напишите лимит, или None если не надо')
+
+
+@router.message(states.AddAdState.get_limit)
+async def get_limit_ad(message : aiogram.types.Message, state : aiogram.fsm.context.FSMContext):
+    if message.text.lower() == 'None':
+        data = None
+    else:
+        data = int(message.text())
+    await state.update_data(limit=data)
+    await state.set_state(states.AddAdState.get_free_time)
+    await message.answer('Напишите пробный период (в днях), или None если не надо')
+
+
+@router.message(states.AddAdState.get_free_time)
+async def get_free_time_ad(message : aiogram.types.Message, state : aiogram.fsm.context.FSMContext):
+    if message.text.lower() == 'None':
+        data = None
+    else:
+        data = int(message.text())
+    await state.update_data(free_time=data)
+    await state.set_state(states.AddAdState.get_message)
+    await message.answer('Напишите добавочное сообщение при старте, или None если не надо')
+
+
+@router.message(states.AddAdState.get_message)
+async def get_message_ad(message : aiogram.types.Message, state : aiogram.fsm.context.FSMContext):
+    if message.text.lower() == 'None':
+        data = None
+    else:
+        data = message.text()
+    await state.update_data(message=data)
+    await state.set_state(None)
+    ad_id = utils.add_ad(
+        state.get_state('title'),
+        state.get_state('description'),
+        state.get_data('limit'),
+        state.get_data('free_time'),
+        state.get_data('message')
+    )
+    await message.answer(f'Реклама добавлена\nhttps://t.me/AVPNmanagerBot?start={ad_id}')
