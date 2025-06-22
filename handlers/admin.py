@@ -250,7 +250,7 @@ async def get_description_ad(message : aiogram.types.Message, state : aiogram.fs
     if message.text.lower() == 'None':
         data = None
     else:
-        data = message.text()
+        data = message.text
     await state.update_data(description=data)
     await state.set_state(states.AddAdState.get_limit)
     await message.answer('Напишите лимит, или None если не надо')
@@ -261,7 +261,7 @@ async def get_limit_ad(message : aiogram.types.Message, state : aiogram.fsm.cont
     if message.text.lower() == 'None':
         data = None
     else:
-        data = int(message.text())
+        data = int(message.text)
     await state.update_data(limit=data)
     await state.set_state(states.AddAdState.get_free_time)
     await message.answer('Напишите пробный период (в днях), или None если не надо')
@@ -272,7 +272,7 @@ async def get_free_time_ad(message : aiogram.types.Message, state : aiogram.fsm.
     if message.text.lower() == 'None':
         data = None
     else:
-        data = int(message.text())
+        data = int(message.text)
     await state.update_data(free_time=data)
     await state.set_state(states.AddAdState.get_message)
     await message.answer('Напишите добавочное сообщение при старте, или None если не надо')
@@ -283,7 +283,7 @@ async def get_message_ad(message : aiogram.types.Message, state : aiogram.fsm.co
     if message.text.lower() == 'None':
         data = None
     else:
-        data = message.text()
+        data = message.text
     await state.update_data(message=data)
     await state.set_state(None)
     ad_id = utils.add_ad(
