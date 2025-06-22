@@ -318,7 +318,8 @@ def get_ad_info(id):
     try:
         cur.execute(f'SELECT title, description, limit, free_time, message FROM ads WHERE id={id};')
         data = cur.fetchone()
-    except:
+    except Exception as exc:
+        print(exc)
         return None
     cur.close()
     db.close()

@@ -295,4 +295,4 @@ async def get_message_ad(message : aiogram.types.Message, state : aiogram.fsm.co
         data['free_time'],
         data['message']
     )
-    await message.answer(f'Реклама добавлена\nhttps://t.me/AVPNmanagerBot?start={ad_id}')
+    await message.answer(f'Реклама добавлена\nhttps://t.me/AVPNmanagerBot?start=ad{ad_id}')
