@@ -247,7 +247,7 @@ async def get_title_ad(message : aiogram.types.Message, state : aiogram.fsm.cont
 
 @router.message(states.AddAdState.get_description)
 async def get_description_ad(message : aiogram.types.Message, state : aiogram.fsm.context.FSMContext):
-    if message.text.lower() == 'None':
+    if message.text.lower() == 'none':
         data = None
     else:
         data = message.text
@@ -258,7 +258,7 @@ async def get_description_ad(message : aiogram.types.Message, state : aiogram.fs
 
 @router.message(states.AddAdState.get_limit)
 async def get_limit_ad(message : aiogram.types.Message, state : aiogram.fsm.context.FSMContext):
-    if message.text.lower() == 'None':
+    if message.text.lower() == 'none':
         data = None
     else:
         data = int(message.text)
@@ -269,7 +269,7 @@ async def get_limit_ad(message : aiogram.types.Message, state : aiogram.fsm.cont
 
 @router.message(states.AddAdState.get_free_time)
 async def get_free_time_ad(message : aiogram.types.Message, state : aiogram.fsm.context.FSMContext):
-    if message.text.lower() == 'None':
+    if message.text.lower() == 'none':
         data = None
     else:
         data = int(message.text)
@@ -280,7 +280,7 @@ async def get_free_time_ad(message : aiogram.types.Message, state : aiogram.fsm.
 
 @router.message(states.AddAdState.get_message)
 async def get_message_ad(message : aiogram.types.Message, state : aiogram.fsm.context.FSMContext):
-    if message.text.lower() == 'None':
+    if message.text.lower() == 'none':
         data = None
     else:
         data = message.text

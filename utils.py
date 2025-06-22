@@ -288,6 +288,7 @@ def get_users_subscriptions():
 def add_ad(title, description, limit, free_time, message):
     db = sqlite3.connect('db.sqlite')
     cur = db.cursor()
-    cur.execute(f'INSERT INTO ads(title, description, limit, free_time, message) VALUES("{title}", "{description}", {limit}, {free_time}, "{message}");')
+    print(f'INSERT INTO ads(title, description, limit, free_time, message) VALUES("{title}", "{description}", {limit}, {free_time}, "{message}");')
+    cur.execute(f'INSERT INTO ads(title, description, "limit", free_time, message) VALUES("{title}", "{description}", {limit}, {free_time}, "{message}");')
     db.commit()
-    return cur.lastrowid()
+    return cur.lastrowid
