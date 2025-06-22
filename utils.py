@@ -296,3 +296,4 @@ def add_ad(title, description, limit, free_time, message):
     if free_time is not None:
         cur.execute(f'UPDATE ads SET "free_time"={free_time} WHERE id={row_id};')
     db.commit()
+    return row_id
