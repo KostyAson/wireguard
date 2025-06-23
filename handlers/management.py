@@ -32,7 +32,7 @@ async def get_device_name(message : aiogram.types.Message, state : aiogram.fsm.c
         name = str(message.from_user.first_name) + " " + str(message.from_user.last_name)
     utils.add_device(message.from_user.id, message.text, name)
     normal_name = utils.get_normal_device_name(message.text)
-    os.system(f'qrencode -t png -o qr.png < {normal_name}.conf')
+    os.system(f'qrencode -t png -s 10 -m 1 -o qr.png < {normal_name}.conf')
     await message.answer_document(
         aiogram.types.input_file.FSInputFile(f'{normal_name}.conf'),
         caption=f'Файл для подключения к VPN с {message.text}\nИспользуйте данный файл только для одного устройства'
@@ -112,7 +112,7 @@ async def manage_device(callback : aiogram.types.CallbackQuery, state : aiogram.
             aiogram.types.input_file.FSInputFile(f'{normal_name}.conf'),
             caption=f'Файл для подключения к VPN с {name}\nИспользуйте данный файл только для одного устройства'
         )
-        os.system(f'qrencode -t png -o qr.png < {normal_name}.conf')
+        os.system(f'qrencode -t png -s 10 -m 1 -o qr.png < {normal_name}.conf')
         await callback.message.answer_photo(
             photo=aiogram.types.FSInputFile(f'qr.png'),
             caption=f'QR для подключения к VPN с {name}\nИспользуйте данный QR только для одного устройства'
