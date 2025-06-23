@@ -23,7 +23,7 @@ async def start_message(message : aiogram.types.Message, command : aiogram.filte
             if utils.get_count_ad(ad_id) == ad_info[2]:
                 ad_id = None
             else:
-                if ad_info[4] is not None:
+                if ad_info[4].lower() != "None":
                     await message.answer(text=ad_info[4])
         else:
             ad_id = None
