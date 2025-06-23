@@ -304,8 +304,8 @@ async def get_ads_info(message : aiogram.types.Message):
     if message.from_user.id == 2096978507:
         ids = utils.get_all_ads()
         for id in ids:
-            data = utils.get_ad_info(id)
-            count_users = utils.get_count_ad(id)
+            data = utils.get_ad_info(int(id))
+            count_users = utils.get_count_ad(int(id))
             await message.answer(
                 text=f'title: {data[0]}\ndescription: {data[1]}\nlimit: {data[2]}\nfree_time: {data[3]}\nmessage: {data[4]}\ncount users: {count_users}'
             )

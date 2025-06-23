@@ -305,7 +305,7 @@ def add_ad(title, description, limit, free_time, message):
 def get_count_ad(id):
     db = sqlite3.connect('db.sqlite')
     cur = db.cursor()
-    cur.execute(f'SELECT id FROM users WHERE from_user={id};')
+    cur.execute(f'SELECT id FROM users WHERE from_ad={id};')
     data = cur.fetchall()
     cur.close()
     db.close()
