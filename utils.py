@@ -324,3 +324,13 @@ def get_ad_info(id):
     cur.close()
     db.close()
     return data
+
+
+def get_all_ads():
+    db = sqlite3.connect('db.sqlite')
+    cur = db.cursor()
+    cur.execute('SELECT id FROM ads;')
+    data = cur.fetchall()
+    cur.close()
+    db.close()
+    return data

@@ -27,6 +27,7 @@ async def admin(message : aiogram.types.Message):
 Отправить сообщение конкретному пользователю - /send_to_user
 Получить сроки подписок пользователей - /get_users_subscriptions
 Добавить рекламу - /add_ad
+Получить информацию о рекламах - /get_ads_info
 '''
         )
     else:
@@ -296,3 +297,16 @@ async def get_message_ad(message : aiogram.types.Message, state : aiogram.fsm.co
         data['message']
     )
     await message.answer(f'Реклама добавлена\nhttps://t.me/AVPNmanagerBot?start=ad{ad_id}')
+
+
+@router.message(aiogram.F.text=='/get_ads_info')
+async def get_ads_info(message : aiogram.types.Message):
+    if message.from_user.id == 2096978507:
+        ids = utils.get_all_ads()
+        for id in ids:
+            data = utils.get_ad_info(id)
+            count_users = utils.get_count_ad(id)
+            await message.answer(
+                text=f'title: {data[0]}\ndescription: {data[1]}\nlimit: {data[2]}\nfree_time: {data[3]}\nmessage: {data[4]}\ncount users: {count_users}'
+            )
+            await asyncio.sleep(0.5)
