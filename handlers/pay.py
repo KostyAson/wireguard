@@ -149,7 +149,7 @@ async def get_payment(callback : aiogram.types.CallbackQuery, state : aiogram.fs
             await bot.send_message(2096978507, f'Пользователь @{callback.from_user.username} оплатил подписку на {sub}')
         await callback.message.edit_reply_markup(reply_markup=None)
         await callback.message.answer(
-            'Оплата произведена успешно! ✅\n\nИнструкция по подключению VPN - /instruction 📄\n\nУправление устройствами - /management ⚙'
+            'Оплата произведена успешно, VPN снова работает, спасибо за доверие! ✅'
         )
         user_ref = utils.get_user_ref(callback.from_user.id)
         if user_ref is not None:
