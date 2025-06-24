@@ -14,11 +14,11 @@ router = aiogram.Router()
 async def add_device(message : aiogram.types.Message, state : aiogram.fsm.context.FSMContext):
     log.logger.info(f"Пользователь {utils.get_user_username(message)} отправил комманду add")
     if utils.check_user_sub(message.from_user.id):
-        if len(utils.get_user_devices(message.from_user.id)) < 2 or message.from_user.id == 2096978507 or (message.from_user.id in (802024759, 792248687) and len(utils.get_user_devices(message.from_user.id)) <= 4):
+        if len(utils.get_user_devices(message.from_user.id)) < 3 or message.from_user.id == 2096978507 or (message.from_user.id in (802024759, 792248687) and len(utils.get_user_devices(message.from_user.id)) <= 4):
             await state.set_state(states.AddDevice.get_name)
             await message.answer('Отправьте название для нового устройства 🖊')
         else:
-            await message.answer('Вы достигли лимита в 2 устройства ❌\n\nДля добавления нового устройства, вы можете удалить одно из созданных - /management 🗑')
+            await message.answer('Вы достигли лимита в 3 устройства ❌\n\nДля добавления нового устройства, вы можете удалить одно из созданных - /management 🗑')
     else:
         await message.answer('Сначала оплатите подписку - /pay')
 
