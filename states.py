@@ -16,6 +16,7 @@ class AdminState(aiogram.fsm.state.StatesGroup):
     send_message = aiogram.fsm.state.State()
     add_ip = aiogram.fsm.state.State()
     send_to_user = aiogram.fsm.state.State()
+    del_add = aiogram.fsm.state.State()
 
 
 class AddAdState(aiogram.fsm.state.StatesGroup):

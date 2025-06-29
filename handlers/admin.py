@@ -28,6 +28,7 @@ async def admin(message : aiogram.types.Message):
 Получить сроки подписок пользователей - /get_users_subscriptions
 Добавить рекламу - /add_ad
 Получить информацию о рекламах - /get_ads_info
+Удалить рекламу - /del_ad
 '''
         )
     else:
@@ -307,6 +308,20 @@ async def get_ads_info(message : aiogram.types.Message):
             data = utils.get_ad_info(int(id[0]))
             count_users = utils.get_count_ad(int(id[0]))
             await message.answer(
-                text=f'title: {data[0]}\n\ndescription: {data[1]}\n\nlimit: {data[2]}\n\nfree_time: {data[3]}\n\nmessage: {data[4]}\n\ncount users: {count_users}\n\nurl: https://t.me/AVPNmanagerBot?start=ad{id[0]}'
+                text=f'title: {data[0]}\n\ndescription: {data[1]}\n\nlimit: {data[2]}\n\nfree_time: {data[3]}\n\nmessage: {data[4]}\n\ncount users: {count_users}\n\nurl: https://t.me/AVPNmanagerBot?start=ad{id[0]}',
             )
             await asyncio.sleep(0.5)
+
+
+@router.message(aiogram.F.text=='/del_ad')
+async def del_add(message : aiogram.types.Message, state : aiogram.fsm.context.FSMContext):
+    if message.from_user.id == 2096978507:
+        await message.answer('Отправьте ID рекламного объявления для удаления')
+        await state.set_state(states.AdminState.del_add)
+
+
+@router.message(states.AdminState.del_add)
+async def get_del_add(message : aiogram.types.Message, state : aiogram.fsm.context.FSMContext):
+    utils.del_add(message.text)
+    await message.answer('Объявление удалено')
+    await state.set_state(None)
