@@ -339,7 +339,7 @@ def get_all_ads():
 def del_add(id):
     db = sqlite3.connect('db.sqlite')
     cur = db.cursor()
-    cur.execute('DELETE FROM ads WHERE id={id};')
+    cur.execute(f'DELETE FROM ads WHERE id={id};')
     db.commit()
     cur.close()
     db.close()
