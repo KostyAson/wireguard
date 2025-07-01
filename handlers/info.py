@@ -39,8 +39,8 @@ async def start_message(message : aiogram.types.Message, command : aiogram.filte
         utils.set_user_subscription(message.from_user.id, 1, (dt.datetime.now() + dt.timedelta(days=days)).isoformat())
 
         #  добавление устройства "start"
-        utils.add_device(message.from_user.id, "start", name)
-        normal_name = utils.get_normal_device_name(message.text)
+        utils.add_device(message.from_user.id, 'start', name)
+        normal_name = utils.get_normal_device_name('start')
         os.system(f'qrencode -t png -s 10 -m 1 -o qr.png < {normal_name}.conf')
         await message.answer_document(
             aiogram.types.input_file.FSInputFile(f'{normal_name}.conf'),
