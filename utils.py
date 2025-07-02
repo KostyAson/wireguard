@@ -343,3 +343,23 @@ def del_add(id):
     db.commit()
     cur.close()
     db.close()
+
+
+def get_ad_users(id):
+    os.system('wg show > stats.txt')
+    stats = open('stats.txt').readlines()
+    os.system('rm stats.txt')
+    db = sqlite3.connect('db.sqlite')
+    cur = db.cursor()
+    last = None
+    users = set()
+    for line in stats:
+        if line.startswith('peer'):
+            last = line.split()[1]
+        elif line.startswith('endpoint'):
+            cur.execute(f'SELECT user_id FROM devices WHERE public_key="{last}";')
+            user = cur.fetchone[0]
+            cur.execute(f'SELECT from_ad FROM users WHERE id={user};')
+            if cur.fetchone()[0] == id:
+                users.add(user)
+    return users

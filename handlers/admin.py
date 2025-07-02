@@ -306,9 +306,10 @@ async def get_ads_info(message : aiogram.types.Message):
         ids = utils.get_all_ads()
         for id in ids:
             data = utils.get_ad_info(int(id[0]))
-            count_users = utils.get_count_ad(int(id[0]))
+            count_clicks = utils.get_count_ad(int(id[0]))
+            count_users = len(utils.get_ad_users(int(id[0])))
             await message.answer(
-                text=f'title: {data[0]}\n\ndescription: {data[1]}\n\nlimit: {data[2]}\n\nfree_time: {data[3]}\n\nmessage: {data[4]}\n\ncount users: {count_users}\n\nurl: https://t.me/AVPNmanagerBot?start=ad{id[0]}',
+                text=f'title: {data[0]}\n\ndescription: {data[1]}\n\nlimit: {data[2]}\n\nfree_time: {data[3]}\n\nmessage: {data[4]}\n\ncount clicks: {count_clicks}\n\ncount users: {count_users}\n\nurl: https://t.me/AVPNmanagerBot?start=ad{id[0]}',
             )
             await asyncio.sleep(0.5)
 
