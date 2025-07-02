@@ -356,10 +356,12 @@ def get_ad_users(id):
     for line in stats:
         if line.startswith('peer'):
             last = line.split()[1]
-        elif line.startswith('endpoint'):
+        elif line.startswith('  endpoint'):
             cur.execute(f'SELECT user_id FROM devices WHERE public_key="{last}";')
             user = cur.fetchone[0]
             cur.execute(f'SELECT from_ad FROM users WHERE id={user};')
             if cur.fetchone()[0] == id:
                 users.add(user)
+    cur.close()
+    db.close()
     return users
