@@ -30,13 +30,13 @@ start_with_sub = '''
     • <a href="https://download.wireguard.com/windows-client/wireguard-installer.exe">Wireguard для Windows 🖥</a>
     • <a href="https://itunes.apple.com/us/app/wireguard/id1451685025?ls=1&mt=12">Wireguard для MacOS ☕️</a>
 2) С помощью приложения отсканируйте QR или откройте файл (бот отправил их ниже)
-
+<blockquote expandable>
 Более подробная инструкция 📄:
 <a href="https://telegra.ph/Podklyuchenie-k-VPN-s-iOS-07-01">Инструкция для iOS 🍏</a>
 <a href="https://telegra.ph/Podklyuchenie-k-VPN-s-Android-07-01">Инструкция для Android 🤖</a>
 <a href="https://telegra.ph/Podklyuchenie-k-VPN-s-Windows-07-01">Инструкция для Windows 🖥</a>
 <a href="https://telegra.ph/Podklyuchenie-k-VPN-s-MacOS-07-01">Инструкция для MacOS ☕️</a>
-<blockquote>
+
 Вы можете подключить ещё 2 устройства, получив QR и файл для подключения с помощью команды /add ➕
 
 Управляйте вашими устройствами с помощью команды /management ⚙
