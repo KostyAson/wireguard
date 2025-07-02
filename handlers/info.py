@@ -48,7 +48,7 @@ async def start_message(message : aiogram.types.Message, command : aiogram.filte
         )
         await message.answer_photo(
             photo=aiogram.types.FSInputFile(f'qr.png'),
-            caption=f'QR для подключения к VPN'
+            caption=f'QR для подключения к VPN\n\nИнструкция по подключению выше 👆'
         )
         os.system(f'rm "{normal_name}.conf" && rm "qr.png"')
     else:
