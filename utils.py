@@ -358,7 +358,10 @@ def get_ad_users(id):
             last = line.split()[1]
         elif line.startswith('  endpoint'):
             cur.execute(f'SELECT user_id FROM devices WHERE public_key="{last}";')
-            user = cur.fetchone()[0]
+            try:
+                user = cur.fetchone()[0]
+            except:
+                continue
             cur.execute(f'SELECT from_ad FROM users WHERE id={user};')
             if cur.fetchone()[0] == id:
                 users.add(user)
