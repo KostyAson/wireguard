@@ -6,6 +6,7 @@ import utils
 import sqlite3
 import os
 import asyncio
+import answers
 import datetime as dt
 
 router = aiogram.Router()
@@ -297,7 +298,9 @@ async def get_message_ad(message : aiogram.types.Message, state : aiogram.fsm.co
         data['free_time'],
         data['message']
     )
-    await message.answer(f'Реклама добавлена\nhttps://t.me/AVPNmanagerBot?start=ad{ad_id}')
+    await message.answer(f'Реклама добавлена')
+    url = f'https://t.me/AVPNmanagerBot?start=ad{ad_id}'
+    await message.answer(answers.ad.replace('{url}', url), parse_mode='HTML')
 
 
 @router.message(aiogram.F.text=='/get_ads_info')
