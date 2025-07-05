@@ -300,7 +300,7 @@ async def get_message_ad(message : aiogram.types.Message, state : aiogram.fsm.co
     )
     await message.answer(f'Реклама добавлена')
     url = f'https://t.me/AVPNmanagerBot?start=ad{ad_id}'
-    await message.answer(answers.ad.replace('{url}', url), parse_mode='HTML')
+    await message.answer(answers.ad.replace('{url}', url).replace('{days}', str(data['free_time'])), parse_mode='HTML')
 
 
 @router.message(aiogram.F.text=='/get_ads_info')

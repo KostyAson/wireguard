@@ -21,7 +21,11 @@ dp.include_router(handlers.admin.router)
 
 
 async def main():
-    await asyncio.gather(dp.start_polling(bot), utils.control_sub(bot))
+    await asyncio.gather(
+        dp.start_polling(bot),
+        utils.control_sub(bot),
+        utils.check_start_users(bot)
+    )
 
 
 if __name__ == '__main__':

@@ -345,26 +345,42 @@ def del_add(id):
     db.close()
 
 
+async def check_start_users(bot : aiogram.Bot):
+    while True:
+        os.system('wg show > stats.txt')
+        stats = open('stats.txt').readlines()
+        os.system('rm stats.txt')
+        db = sqlite3.connect('db.sqlite')
+        cur = db.cursor()
+        last = None
+        for line in stats:
+            if line.startswith('peer'):
+                last = line.split()[1]
+            elif line.startswith('  endpoint'):
+                cur.execute(f'SELECT user_id FROM devices WHERE public_key="{last}";')
+                try:
+                    user = cur.fetchone()[0]
+                except:
+                    continue
+                cur.execute(f'SELECT start, from_ad FROM users WHERE id={user};')
+                data = cur.fetchone()
+                if data[0] != 1:
+                    cur.execute(f'UPDATE users SET start=1 WHERE id={user};')
+                    if data[1] is not None:
+                        await bot.send_message(chat_id=2096978507, text=f'❗️❗️❗️\n\nНОВЫЙ ПОЛЬЗОВАТЕЛЬ\nИсточник: ad{data[1]}')
+                        await bot.send_message(chat_id=5523266075, text=f'❗️❗️❗️\n\nНОВЫЙ ПОЛЬЗОВАТЕЛЬ\nИсточник: ad{data[1]}')
+            await asyncio.sleep(0.1)
+        db.commit()
+        cur.close()
+        db.close()
+        await asyncio.sleep(300)
+
+
 def get_ad_users(id):
-    os.system('wg show > stats.txt')
-    stats = open('stats.txt').readlines()
-    os.system('rm stats.txt')
     db = sqlite3.connect('db.sqlite')
     cur = db.cursor()
-    last = None
-    users = set()
-    for line in stats:
-        if line.startswith('peer'):
-            last = line.split()[1]
-        elif line.startswith('  endpoint'):
-            cur.execute(f'SELECT user_id FROM devices WHERE public_key="{last}";')
-            try:
-                user = cur.fetchone()[0]
-            except:
-                continue
-            cur.execute(f'SELECT from_ad FROM users WHERE id={user};')
-            if cur.fetchone()[0] == id:
-                users.add(user)
+    cur.execute(f'SELECT id FROM users WHERE from_ad={id} AND start=1;')
+    data = cur.fetchall()
     cur.close()
     db.close()
-    return users
+    return data
