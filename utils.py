@@ -246,11 +246,11 @@ def grand_ref_sub(ref_id, sub):
 def get_payers():
     conn = sqlite3.connect('db.sqlite')
     cur = conn.cursor()
-    cur.execute('SELECT * FROM users WHERE subscription=1 AND subdate!="2050-09-26T23:15:43.227305";')
-    data = cur.fetchall()
+    cur.execute('SELECT subdate FROM users WHERE subscription=1 AND start=1;')
+    data = list(filter(lambda x : int(x[0].split('-')[0]) <= 2027, cur.fetchall()))
     cur.close()
     conn.close()
-    return len(data) * 200
+    return len(data) * 199
 
 
 def get_all_users():
