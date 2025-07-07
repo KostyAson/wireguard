@@ -231,9 +231,10 @@ async def send_message_to_user(message : aiogram.types.Message,
 @router.message(aiogram.F.text=='/get_users_subscriptions')
 async def get_users_subscriptions(message : aiogram.types.Message):
     if message.from_user.id == 2096978507:
-        s = utils.get_users_subscriptions()
-        for x in s[::50]:
-            await message.answer(text=x)
+        s = utils.get_users_subscriptions().split('\n')
+        for i in range(0, len(s), 50):
+            await message.answer(text='\n'.join(s[i:i + 50]))
+            i += 50
 
 
 @router.message(aiogram.F.text=='/add_ad')
