@@ -353,6 +353,7 @@ async def check_start_users(bot : aiogram.Bot):
         db = sqlite3.connect('db.sqlite')
         cur = db.cursor()
         last = None
+        messages = []
         for line in stats:
             if line.startswith('peer'):
                 last = line.split()[1]
@@ -367,12 +368,14 @@ async def check_start_users(bot : aiogram.Bot):
                 if data[0] != 1:
                     cur.execute(f'UPDATE users SET start=1 WHERE id={user};')
                     if data[1] is not None:
-                        await bot.send_message(chat_id=2096978507, text=f'❗️❗️❗️\n\nНОВЫЙ ПОЛЬЗОВАТЕЛЬ\nИсточник: ad{data[1]}')
-                        await bot.send_message(chat_id=5523266075, text=f'❗️❗️❗️\n\nНОВЫЙ ПОЛЬЗОВАТЕЛЬ\nИсточник: ad{data[1]}')
-            await asyncio.sleep(0.1)
+                        messages.append(f'❗️❗️❗️\n\nНОВЫЙ ПОЛЬЗОВАТЕЛЬ\nИсточник: ad{data[1]}')
         db.commit()
         cur.close()
         db.close()
+        for message in messages:
+            await bot.send_message(chat_id=2096978507, text=message)
+            await bot.send_message(chat_id=5523266075, text=message)
+            await asyncio.sleep(0.1)
         await asyncio.sleep(300)
 
 
