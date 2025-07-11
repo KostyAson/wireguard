@@ -273,7 +273,7 @@ def get_user_username(message):
 def get_users_subscriptions():
     db = sqlite3.connect('db.sqlite')
     cur = db.cursor()
-    cur.execute("SELECT subdate, username FROM users WHERE subscription=1;")
+    cur.execute("SELECT subdate, username FROM users WHERE subscription=1 AND start=1;")
     data = map(lambda x : (dt.datetime.fromisoformat(x[0]), x[1]), cur.fetchall())
     data = sorted(filter(lambda x : x[0] < dt.datetime(year=2050, month=1, day=1), data))
     s = ''
