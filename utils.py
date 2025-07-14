@@ -224,17 +224,17 @@ def get_user_ref(user_id):
     return data[0]
 
 
-def grand_ref_sub(ref_id, sub):
+def grand_ref_sub(ref_id):
     conn = sqlite3.connect('db.sqlite')
     cur = conn.cursor()
     if check_user_sub(ref_id):
         cur.execute(f'SELECT subdate FROM users WHERE id={ref_id};')
         date = dt.datetime.fromisoformat(cur.fetchone()[0])
-        date += dt.timedelta(days=7 * sub)
+        date += dt.timedelta(days=7)
         ans = True
     else:
         date = dt.datetime.now()
-        date += dt.timedelta(days=7 * sub)
+        date += dt.timedelta(days=7)
         ans = False
     cur.execute(f'UPDATE users SET subscription=1,subdate="{date.isoformat()}" WHERE id={ref_id};')
     conn.commit()

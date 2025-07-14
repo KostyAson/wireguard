@@ -56,24 +56,3 @@ def make_manage_device_keyboard(data):
     return aiogram.types.InlineKeyboardMarkup(
         inline_keyboard=keyboard
     )
-
-
-select_sub_keyboard = aiogram.types.InlineKeyboardMarkup(
-    inline_keyboard=[
-        [aiogram.types.InlineKeyboardButton(text='1 месяц', callback_data='1')]
-    ]
-)
-
-select_sub_keyboard_with_free = aiogram.types.InlineKeyboardMarkup(
-    inline_keyboard=[
-        [aiogram.types.InlineKeyboardButton(text='1 неделя', callback_data='0')],
-        [aiogram.types.InlineKeyboardButton(text='1 месяц', callback_data='1')]
-    ]
-)
-
-get_pay_keyboard = aiogram.types.InlineKeyboardMarkup(
-    inline_keyboard=[
-        [aiogram.types.InlineKeyboardButton(text='Я оплатил ✅', callback_data='1')],
-        [aiogram.types.InlineKeyboardButton(text='Передумал оплачивать ❌', callback_data='2')]
-    ]
-)
