@@ -93,7 +93,6 @@ async def get_email(message : aiogram.types.Message, state : aiogram.fsm.context
             utils.update_server_config()
             name = utils.get_user_username(message)
             await bot.send_message(2096978507, f'Пользователь @{name} оплатил подписку')
-            await message.edit_reply_markup(reply_markup=None)
             await message.answer(
                 'Оплата произведена успешно, VPN снова работает, спасибо за доверие! ✅'
             )
