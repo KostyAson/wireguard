@@ -91,15 +91,15 @@ async def get_email(message : aiogram.types.Message, state : aiogram.fsm.context
                 (dt.datetime.now() + dt.timedelta(days=30)).isoformat()
             )
             utils.update_server_config()
-            await bot.send_message(2096978507, f'Пользователь @{utils.get_user_username(message)} оплатил подписку')
+            name = utils.get_user_username(message)
+            await bot.send_message(2096978507, f'Пользователь @{name} оплатил подписку')
             await message.edit_reply_markup(reply_markup=None)
             await message.answer(
                 'Оплата произведена успешно, VPN снова работает, спасибо за доверие! ✅'
             )
-            log.logger.info(f"Пользователь {utils.get_user_username(message)} оплатил подписку на 1 месяц")
+            log.logger.info(f"Пользователь {name} оплатил подписку на 1 месяц")
             user_ref = utils.get_user_ref(message.from_user.id)
             if user_ref is not None:
-                name = utils.get_user_username(message)
                 sub_ref = utils.grand_ref_sub(user_ref)
                 if sub_ref:
                     await bot.send_message(chat_id=user_ref, text=f'Пользователь {name} перешел по вашей ссылке и оплатил подписку. Продлили вашу подписку на 1 неделю')
@@ -107,5 +107,5 @@ async def get_email(message : aiogram.types.Message, state : aiogram.fsm.context
                     await bot.send_message(chat_id=user_ref, text=f'Пользователь {name} перешел по вашей ссылке и оплатил подписку. Выдали вам подписку на 1 неделю')
             break
     else:
-        await message.answer('Срок действия ссылки истёк\n\nДля повторной оплаты отправьте команду /pay')
+        await message.answer('Срок действия ссылки истёк\n\nДля повторной попытки оплаты отправьте команду /pay')
     await state.set_state(None)

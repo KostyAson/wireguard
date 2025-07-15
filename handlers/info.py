@@ -35,7 +35,6 @@ async def start_message(message : aiogram.types.Message, command : aiogram.filte
         else:
             days = 7
         await message.answer(text=answers.start_with_sub.replace('{days}', str(days)), parse_mode='HTML', disable_web_page_preview=True)
-        utils.set_user_use_free_sub(message.from_user.id)
         utils.set_user_subscription(message.from_user.id, 1, (dt.datetime.now() + dt.timedelta(days=days)).isoformat())
 
         #  добавление устройства "start"
