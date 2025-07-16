@@ -345,19 +345,22 @@ async def mailing(message : aiogram.types.Message, bot : aiogram.Bot):
         name = user[1]
         if id in [7180445157]:
             continue
+        utils.set_user_subscription(id, 1, (dt.datetime.now() + dt.timedelta(days=7)).isoformat())
         try:
-            await bot.send_message(chat_id=id, text=answers.mailing, parse_mode='HTML')
+            await bot.send_message(chat_id=id, text=answers.mailing, parse_mode='HTML', disable_web_page_preview=True)
             #  добавление устройства "start"
-            utils.add_device(message.from_user.id, 'start', name)
+            utils.add_device(id, 'start', name)
             normal_name = utils.get_normal_device_name('start')
             os.system(f'qrencode -t png -s 10 -m 1 -o qr.png < {normal_name}.conf')
-            await message.answer_document(
-                aiogram.types.input_file.FSInputFile(f'{normal_name}.conf'),
-                caption=f'Файл для подключения к VPN\n\nИнструкция по подключению выше 👆'
+            await bot.send_document(
+                document=aiogram.types.input_file.FSInputFile(f'{normal_name}.conf'),
+                caption=f'Файл для подключения к VPN\n\nИнструкция по подключению выше 👆',
+                chat_id=id
             )
-            await message.answer_photo(
+            await bot.send_photo(
                 photo=aiogram.types.FSInputFile(f'qr.png'),
-                caption=f'QR для подключения к VPN\n\nИнструкция по подключению выше 👆'
+                caption=f'QR для подключения к VPN\n\nИнструкция по подключению выше 👆',
+                chat_id=id
             )
             os.system(f'rm "{normal_name}.conf" && rm "qr.png"')
             c += 1
