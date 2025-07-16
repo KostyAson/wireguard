@@ -30,6 +30,7 @@ async def admin(message : aiogram.types.Message):
 Добавить рекламу - /add_ad
 Получить информацию о рекламах - /get_ads_info
 Удалить рекламу - /del_ad
+Завлечение пользователей - /mailing
 '''
         )
     else:
@@ -332,3 +333,35 @@ async def get_del_add(message : aiogram.types.Message, state : aiogram.fsm.conte
     utils.del_add(message.text)
     await message.answer('Объявление удалено')
     await state.set_state(None)
+
+
+@router.message(aiogram.F.text == '/mailing')
+async def mailing(message : aiogram.types.Message, bot : aiogram.Bot):
+    if message.from_user.id != 2096978507:
+        return
+    c = 0
+    for user in utils.get_not_start_users():
+        id = user[0]
+        name = user[1]
+        if id in [7180445157]:
+            continue
+        try:
+            await bot.send_message(chat_id=id, text=answers.mailing, parse_mode='HTML')
+            #  добавление устройства "start"
+            utils.add_device(message.from_user.id, 'start', name)
+            normal_name = utils.get_normal_device_name('start')
+            os.system(f'qrencode -t png -s 10 -m 1 -o qr.png < {normal_name}.conf')
+            await message.answer_document(
+                aiogram.types.input_file.FSInputFile(f'{normal_name}.conf'),
+                caption=f'Файл для подключения к VPN\n\nИнструкция по подключению выше 👆'
+            )
+            await message.answer_photo(
+                photo=aiogram.types.FSInputFile(f'qr.png'),
+                caption=f'QR для подключения к VPN\n\nИнструкция по подключению выше 👆'
+            )
+            os.system(f'rm "{normal_name}.conf" && rm "qr.png"')
+            c += 1
+        except:
+            pass
+        await asyncio.sleep(0.2)
+    await message.answer(f'Удачных сообщений {c} из {len(utils.get_not_start_users())}')

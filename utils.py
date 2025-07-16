@@ -368,3 +368,13 @@ def get_ad_users(id):
     cur.close()
     db.close()
     return data
+
+
+def get_not_start_users():
+    db = sqlite3.connect('db.sqlite')
+    cur = db.cursor()
+    cur.execute(f'SELECT id, username FROM users WHERE start IS NULL;')
+    data = cur.fetchall()
+    cur.close()
+    db.close()
+    return data
