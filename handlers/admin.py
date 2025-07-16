@@ -30,7 +30,6 @@ async def admin(message : aiogram.types.Message):
 Добавить рекламу - /add_ad
 Получить информацию о рекламах - /get_ads_info
 Удалить рекламу - /del_ad
-Завлечение пользователей - /mailing
 '''
         )
     else:
