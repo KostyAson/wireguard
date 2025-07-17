@@ -254,14 +254,32 @@ def get_user_username(message):
 def get_users_subscriptions():
     db = sqlite3.connect('db.sqlite')
     cur = db.cursor()
-    cur.execute("SELECT subdate, username FROM users WHERE subscription=1 AND start=1;")
-    data = map(lambda x : (dt.datetime.fromisoformat(x[0]), x[1]), cur.fetchall())
+    cur.execute("SELECT subdate, username, id FROM users WHERE subscription=1 AND start=1;")
+    data = map(lambda x : (dt.datetime.fromisoformat(x[0]), x[1], x[2]), cur.fetchall())
     data = sorted(filter(lambda x : x[0] < dt.datetime(year=2050, month=1, day=1), data))
+    os.system('wg show > wg.txt')
+    stat = open('wg.txt').read().split('\n')
+    os.system('rm wg.txt')
+    d = {}
+    key = None
+    for x in stat:
+        if x.startswith('peer: '):
+            key = x.split()[1]
+        elif x.startswith('  latest handshake: '):
+            d[key] = x.split(': ')[-1]
     s = ''
     for x in data:
+        cur.execute(f'SELECT public_key FROM devices WHERE user_id={x[2]};')
+        dat = cur.fetchall()
+        h = []
+        for y in dat:
+            try:
+                h.append(d[y[0]])
+            except:
+                continue
         total = (x[0] - dt.datetime.now()).total_seconds()
         days = int(total / 60 / 60 / 24)
-        s += f'{days}:{int((total - days * 24 * 60 * 60) / 60 / 60)} @{x[1]}\n'
+        s += f'{days}:{int((total - days * 24 * 60 * 60) / 60 / 60)} @{x[1]} {" ; ".join(h)}\n'
     cur.close()
     db.close()
     return s[:-1]
