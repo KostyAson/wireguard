@@ -77,7 +77,7 @@ async def get_email(message : aiogram.types.Message, state : aiogram.fsm.context
         f'<a href="{url}">Оплатите подписку</a>\n\nСсылка действительна в течении 5 минут',
         parse_mode='html'
     )
-    for _ in range(15):
+    for _ in range(30):
         await asyncio.sleep(20)
         req = requests.get(
             f'https://api.yookassa.ru/v3/payments/{id}',
