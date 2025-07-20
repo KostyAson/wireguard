@@ -21,6 +21,7 @@ dp.include_router(handlers.admin.router)
 
 
 async def main():
+    os.system('wg-quick up wg0')
     await asyncio.gather(
         dp.start_polling(bot),
         utils.control_sub(bot),
