@@ -74,7 +74,7 @@ async def get_email(message : aiogram.types.Message, state : aiogram.fsm.context
     id = data['id']
     url = data['confirmation']['confirmation_url']
     await message.answer(
-        f'<a href="{url}">Оплатите подписку</a>\n\nСсылка действительна в течении 5 минут',
+        f'<a href="{url}">Оплатите подписку</a>\n\nСсылка действительна в течении 10 минут\n\nПо всем вопросам пишите @kostya_ason',
         parse_mode='html'
     )
     for _ in range(30):
@@ -96,6 +96,7 @@ async def get_email(message : aiogram.types.Message, state : aiogram.fsm.context
             await message.answer(
                 'Оплата произведена успешно, VPN снова работает, спасибо за доверие! ✅'
             )
+            utils.set_payer(message.from_user.id)
             log.logger.info(f"Пользователь {name} оплатил подписку на 1 месяц")
             user_ref = utils.get_user_ref(message.from_user.id)
             if user_ref is not None:
@@ -106,5 +107,13 @@ async def get_email(message : aiogram.types.Message, state : aiogram.fsm.context
                     await bot.send_message(chat_id=user_ref, text=f'Пользователь {name} перешел по вашей ссылке и оплатил подписку. Выдали вам подписку на 1 неделю')
             break
     else:
+        req = requests.post(
+            f'https://api.yookassa.ru/v3/payments/{id}/cancel',
+            headers={
+                'Content-Type': 'application/json',
+                'Idempotence-Key': str(uuid.uuid4())
+            },
+            auth=('441601', os.getenv('youkassa'))
+        )
         await message.answer('Срок действия ссылки истёк\n\nДля повторной попытки оплаты отправьте команду /pay')
     await state.set_state(None)

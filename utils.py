@@ -396,3 +396,12 @@ def get_not_start_users():
     cur.close()
     db.close()
     return data
+
+
+def set_payer(user_id):
+    db = sqlite3.connect('db.sqlite')
+    cur = db.cursor()
+    cur.execute(f'UPDATE users SET payer=1 WHERE id={user_id};')
+    db.commit()
+    cur.close()
+    db.close()
