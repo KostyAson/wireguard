@@ -406,3 +406,22 @@ def set_payer(user_id):
     db.commit()
     cur.close()
     db.close()
+
+
+def get_user_cost(id):
+    db = sqlite3.connect('db.sqlite')
+    cur = db.cursor()
+    cur.execute(f'SELECT low_cost FROM users WHERE id={id};')
+    lc = cur.fetchone()[0]
+    if lc is not None:
+        return 99
+    return int(open('sub_cost.txt').read())
+
+
+def del_low_cost(id):
+    db = sqlite3.connect('db.sqlite')
+    cur = db.cursor()
+    cur.execute(f'UPDATE users SET low_cost=0 WHERE id={id};')
+    db.commit()
+    cur.close()
+    db.close()

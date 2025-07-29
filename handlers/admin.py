@@ -30,6 +30,7 @@ async def admin(message : aiogram.types.Message):
 Добавить рекламу - /add_ad
 Получить информацию о рекламах - /get_ads_info
 Удалить рекламу - /del_ad
+Запустить скидку для неоплативших пользователей - /make_discount
 '''
         )
     else:
@@ -367,3 +368,29 @@ async def mailing(message : aiogram.types.Message, bot : aiogram.Bot):
             pass
         await asyncio.sleep(0.2)
     await message.answer(f'Удачных сообщений {c} из {len(utils.get_not_start_users())}')
+
+
+@router.message(aiogram.F.text == '/make_discount')
+async def make_discount(message : aiogram.types.Message, bot : aiogram.Bot):
+    db = sqlite3.connect('db.sqlite')
+    cur = db.cursor()
+    cur.execute('SELECT id FROM users WHERE subscription=0 AND start=1;')
+    ids = cur.fetchall()
+    for id in ids:
+        cur.execute(f'UPDATE users SET low_cost=1 WHERE id={id[0]};')
+    db.commit()
+    cur.close()
+    db.close()
+    c = 0
+    for id in ids:
+        try:
+            await bot.send_message(
+                chat_id=id[0],
+                text=f'Здравствуйте! 👋\n\nМы заметили, что вы пользовались нашим VPN, но не стали продлевать подписку.\n\nСпециально для вас мы делаем персональную скидку:\n<s>199р</s> 99р\n\nОплачивайте подписку, и пользуйтесь свободным интернетом без ограничений - /pay',
+                parse_mode='HTML'
+            )
+            c += 1
+        except:
+            pass
+        await asyncio.sleep(0.1)
+    await message.answer(text=f'Удачных сообщений: {c}')

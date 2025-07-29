@@ -33,7 +33,7 @@ async def invoicing(message : aiogram.types.Message, state : aiogram.fsm.context
 @router.message(states.PayState.get_email)
 async def get_email(message : aiogram.types.Message, state : aiogram.fsm.context.FSMContext, bot : aiogram.Bot):
     description = 'Подписка на 1 месяц'
-    cost = int(open('sub_cost.txt').read())
+    cost = utils.get_user_cost(message.from_user.id)
     req = requests.post(
         'https://api.yookassa.ru/v3/payments',
         headers={
@@ -97,6 +97,7 @@ async def get_email(message : aiogram.types.Message, state : aiogram.fsm.context
                 'Оплата произведена успешно, VPN снова работает, спасибо за доверие! ✅'
             )
             utils.set_payer(message.from_user.id)
+            utils.del_low_cost(message.from_user.id)
             log.logger.info(f"Пользователь {name} оплатил подписку на 1 месяц")
             user_ref = utils.get_user_ref(message.from_user.id)
             if user_ref is not None:
