@@ -20,7 +20,7 @@ dotenv.load_dotenv('.env')
 async def invoicing(message : aiogram.types.Message, state : aiogram.fsm.context.FSMContext):
     log.logger.info(f"Пользователь {utils.get_user_username(message)} отправил комманду pay")
     if not utils.check_user_sub(message.from_user.id):
-        cost = int(open('sub_cost.txt').read())
+        cost = utils.get_user_cost(message.from_user.id)
         await state.set_state(states.PayState.get_email)
         await message.answer(
             f'Стоимость подписки на 1 месяц: {cost}р\n\nНапишите вашу почту, на неё отправим чек после оплаты 🖊',
