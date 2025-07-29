@@ -413,7 +413,7 @@ def get_user_cost(id):
     cur = db.cursor()
     cur.execute(f'SELECT low_cost FROM users WHERE id={id};')
     lc = cur.fetchone()[0]
-    if lc is not None:
+    if lc == 1:
         return 99
     return int(open('sub_cost.txt').read())
 
