@@ -317,8 +317,9 @@ def get_ad_info(id):
     try:
         cur.execute(f'SELECT title, description, "limit", free_time, message FROM ads WHERE id={id};')
         data = cur.fetchone()
+        cur.execute(f'SELECT id FROM users WHERE payer=1 AND from_ad={id};')
+        data = list(data) + [len(cur.fetchall())]
     except Exception as exc:
-        print(exc)
         return None
     cur.close()
     db.close()
