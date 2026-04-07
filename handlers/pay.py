@@ -19,7 +19,8 @@ dotenv.load_dotenv('.env')
 @router.message(aiogram.F.text=='/pay')
 async def invoicing(message : aiogram.types.Message, state : aiogram.fsm.context.FSMContext):
     log.logger.info(f"Пользователь {utils.get_user_username(message)} отправил комманду pay")
-    if not utils.check_user_sub(message.from_user.id):
+    if not utils.check_user_sub(message.from_user.id)\
+       or (dt.datetime.fromisoformat(utils.get_user_subdate(message.from_user.id)) - dt.datetime.now()).total_seconds() <= 172800:
         cost = utils.get_user_cost(message.from_user.id)
         await state.set_state(states.PayState.get_email)
         await message.answer(
@@ -88,7 +89,12 @@ async def get_email(message : aiogram.types.Message, state : aiogram.fsm.context
             utils.set_user_subscription(
                 message.from_user.id,
                 1,
-                (dt.datetime.now() + dt.timedelta(days=30)).isoformat()
+                (
+                    max(
+                        dt.datetime.now(),
+                        dt.datetime.fromisoformat(utils.get_user_subdate(message.from_user.id))
+                    ) + dt.timedelta(days=30)
+                ).isoformat()
             )
             utils.update_server_config()
             name = utils.get_user_username(message)
@@ -98,6 +104,7 @@ async def get_email(message : aiogram.types.Message, state : aiogram.fsm.context
             )
             utils.set_payer(message.from_user.id)
             utils.del_low_cost(message.from_user.id)
+            utils.set_user_end_sub_mes(message.from_user.id, 0)
             log.logger.info(f"Пользователь {name} оплатил подписку на 1 месяц")
             user_ref = utils.get_user_ref(message.from_user.id)
             if user_ref is not None:

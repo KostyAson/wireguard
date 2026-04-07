@@ -160,14 +160,29 @@ def get_count_user_work_devices(user_id):
     return len(data)
 
 
+def set_user_end_sub_mes(user_id, end_sub_mes):
+    conn = sqlite3.connect('db.sqlite')
+    cur = conn.cursor()
+    cur.execute(f'UPDATE users SET end_sub_mes={end_sub_mes} WHERE id={user_id};')
+    conn.commit()
+    cur.close()
+    conn.close()
+
+
 async def control_sub(bot : aiogram.Bot):
     while True:
         conn = sqlite3.connect('db.sqlite')
         cur = conn.cursor()
-        cur.execute(f'SELECT id, subdate FROM users WHERE subscription=1;')
+        cur.execute(f'SELECT id, subdate, end_sub_mes FROM users WHERE subscription=1;')
         data = cur.fetchall()
-        for id, date in data:
+        for id, date, end_sub_mes in data:
             date = dt.datetime.fromisoformat(date)
+            if end_sub_mes != 1 and (date - dt.datetime.now()).total_seconds() <= 172800:
+                try:
+                    await bot.send_message(id, 'Срок действия вашей подписки истекает через 2 дня.\n\nВы можете продлить ее заранее, что бы не терять доступ к VPN, и Telegram в частности.\n\nПродлить подписку - /pay')
+                except:
+                    pass
+                cur.execute(f'UPDATE users SET end_sub_mes=1 WHERE id={id};')
             if dt.datetime.now() >= date:
                 cur.execute(f'UPDATE users SET subscription=0 WHERE id={id};')
                 try:
